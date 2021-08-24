@@ -2,6 +2,10 @@
   "name": "vite-plugin-comlink",
   "version": "0.1.0",
   "description": "Comlink for Vite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mathe42/vite-plugin-comlink"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Sebastian Krüger (@mathe42)",
