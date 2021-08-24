@@ -1,6 +1,8 @@
 # vite-plugin-comlink
 
-Use Workers with comlink
+Use WebWorkers with comlink. 
+
+This plugin removes the need to call `expose`, `wrap` from comlink and also you don't need to create the worker on your own. This plugin provides a function that returns for each call a new wraped worker with all exposed values and functions.
 
 ### Install
 
@@ -20,6 +22,22 @@ export default {
   ],
 }
 ```
+### Useage
+```ts
+// worker.ts
+export const add = (a: number, b: number) => a + b
+
+// main.ts
+import add_worker from 'comlink:./worker'
+
+// Create Worker
+const instance = add_worker()
+const result = await instance.add(2, 3)
+
+result === 5
+```
+
+See the comlink docs (https://github.com/GoogleChromeLabs/comlink) for more examples. 
 
 
 ## Options
