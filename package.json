@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-comlink",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Comlink for Vite",
   "repository": {
     "type": "git",
