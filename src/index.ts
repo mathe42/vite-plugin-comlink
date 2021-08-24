@@ -1,7 +1,6 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import { createHash } from "crypto";
 import { join } from "path";
-import { parse as parseUrl, URLSearchParams } from "url";
 import { Plugin, ResolvedConfig } from "vite";
 import { rollup } from "rollup";
 
@@ -80,12 +79,7 @@ export default function comlink({
         if (real.startsWith(config.root))
           real = "." + real.slice(config.root.length);
 
-        return `
-        declare module "${id}" {
-          const mod: () => import("comlink").Remote<typeof import("${real}")>
-          export default mod
-        }
-      `;
+        return moduleDefinition(id, real);
       })
       .join("");
 
@@ -95,9 +89,11 @@ export default function comlink({
   return inWorker({
     name: "comlink",
     configResolved(resolvedConfig) {
+      // Save all Config
       isBuild = resolvedConfig.command === "build";
       config = resolvedConfig;
       if (types) {
+        // setup types
         typesFile = join(config.root, typeFile);
         if (!isBuild && existsSync(typesFile)) {
           data = JSON.parse(
@@ -107,13 +103,16 @@ export default function comlink({
       }
     },
     async resolveId(id, importer) {
+      // Path through
       if (id.startsWith(internal_schema)) {
         return id;
       }
+      // Not this plugin
       if (!id.startsWith(schema)) {
         return;
       }
 
+      // Resolve file
       const realPath = id.slice(schema.length);
       const realID = (await this.resolve(realPath, importer))?.id.slice(
         config.root.length
@@ -121,7 +120,8 @@ export default function comlink({
 
       if (!realID) throw new Error(`Worker module ${realPath} not found`);
 
-      if (types) {
+      // Create types
+      if (!isBuild && types) {
         if (data[id] != realID) {
           data[id] = realID;
 
@@ -137,16 +137,20 @@ export default function comlink({
       return schema + realID;
     },
     buildEnd() {
+      // Ensure types are created at least once
       if (types) {
         createTypes();
       }
     },
     async load(id) {
       if (id.startsWith(schema)) {
+        // ID of Worker file
         const baseId = `${internal_schema}${id.slice(schema.length)}`;
+        // URL used to load worker
         let url = `/@id/${baseId}`;
 
         if (isBuild) {
+          // Bundle worker file in new context
           const bundle = await rollup({
             input: baseId,
             plugins: config.plugins.filter(
@@ -166,6 +170,7 @@ export default function comlink({
             await bundle.close();
           }
 
+          // Set filename
           const content = Buffer.from(code);
           const p = id.split(/\/|\\/g);
           const b = p[p.length - 1].split(".");
@@ -175,6 +180,7 @@ export default function comlink({
             config.build.assetsDir,
             `${basename}.${contentHash}.js`
           );
+          // get real URL variable
           url = `__VITE_ASSET__${this.emitFile({
             fileName,
             type: "asset",
@@ -188,8 +194,10 @@ export default function comlink({
         `;
       }
 
+      // Create workerfile
       if (id.startsWith(internal_schema)) {
         return `
+          // Dev-Vite env
           ${!isBuild ? "import '/@vite/env'" : ""}
           import { expose } from 'comlink'
           import * as m from '${id.slice(internal_schema.length)}'
@@ -200,3 +208,12 @@ export default function comlink({
     },
   });
 }
+function moduleDefinition(id: string, real: string): string {
+  return `
+declare module "${id}" {
+  const mod: () => import("comlink").Remote<typeof import("${real}")>
+  export default mod
+}
+`;
+}
+
