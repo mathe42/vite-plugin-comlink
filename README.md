@@ -106,8 +106,6 @@ If you enable types, a `.d.ts` file is generated at runtime that types your impo
 ## Drawbacks
 Not all Browsers support module Workers (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules). This results in some Drawbacks for fastest and best compat.
 
-As Safari TP just added support I will add a option to change to the module Workers in production which will only work in the listed Browsers.
-
 ### Dev
 You have to develop in a Browser that supports module Workers: (https://caniuse.com/mdn-api_worker_worker_ecmascript_modules)
 
