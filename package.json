@@ -1,0 +1,22 @@
+{
+  "name": "vite-plugin-comlink",
+  "version": "0.1.0",
+  "description": "Comlink for Vite",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Sebastian Krüger (@mathe42)",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "yarn build"
+  },
+  "devDependencies": {
+    "@types/node": "^16.7.1",
+    "typescript": "^4.3.5",
+    "vite": "^2.5.0"
+  },
+  "peerDependencies": {
+    "comlink": "^4.3.1",
+    "vite": "^2.5.0"
+  }
+}
