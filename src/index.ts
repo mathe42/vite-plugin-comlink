@@ -159,10 +159,21 @@ export default function comlink({
           // Bundle worker file in new context
           const bundle = await rollup({
             input: baseId,
-            plugins: config.plugins.filter(
-              (v) =>
-                (v as any)._inWorker || internal_worker_plugins.includes(v.name)
-            ),
+            plugins: [
+              ...config.plugins.filter(
+                (v) =>
+                  (v as any)._inWorker ||
+                  internal_worker_plugins.includes(v.name)
+              ),
+              {
+                name: "worker-env",
+                resolveImportMeta(prop, ctx) {
+                  if (prop !== "url") return null;
+
+                  return `new URL('${ctx.chunkId}', location.origin + '${config.base[0] == '/' ? '' : '/'}${config.base}').href`;
+                },
+              },
+            ],
           });
           let code: string;
           try {
