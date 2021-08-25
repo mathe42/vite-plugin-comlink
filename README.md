@@ -129,8 +129,8 @@ You can set the option `moduleWorker` to `true` to also use module worker in pro
 1. In development you need a browser that supports module Worker (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules)
 2. In production (unless setting `moduleWorker` to `true`) all browsers are supported
 
-### Production
-Each worker ist bundled in a new context. So no code spliting betwen Workers and / or main app. This results in larger bundles and loadtime!
+## HMR
+This module doesn't support full HMR out of the box. But if you implement accepting HMR updates (probably only plugin authors that use this plugin will do it). All workers are killed at a HMR update. 
 
 ## Ressources
 https://github.com/GoogleChromeLabs/comlink  

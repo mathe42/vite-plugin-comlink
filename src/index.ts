@@ -201,10 +201,19 @@ export default function comlink({
         return `
           import { wrap } from 'comlink'
 
+          let workers = []
+
+          if (import.meta.hot) {
+            import.meta.hot.dispose((data) => {
+              workers.forEach(worker => worker.terminate())
+            })
+          }
+
           export default () => {
             const worker = new Worker('${url}'${
               !isBuild || moduleWorker ? ", {type: 'module'}" : ""
             })
+            ${!isBuild ? "workers.push(worker)" : ""}
             wrap(worker)
           }
         `;
