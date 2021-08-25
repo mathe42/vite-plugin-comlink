@@ -8,7 +8,11 @@ This plugin removes the need to call `expose`, `wrap` from comlink and also you 
 
 ```sh
 npm i --save-dev vite-plugin-comlink # yarn add -D vite-plugin-comlink
+npm i --save comlink # yarn add comlink
 ```
+
+### Comlink install
+As you don't want to wait for a new release for this plugin when a new version of comlink is releast this plugin has comlink as a peer dependencie so you can install the version of comlink that you need.
 
 ### Add it to vite.config.js
 
@@ -71,7 +75,13 @@ export default {
        * Filename of type file
        * @default comlink.d.ts
        */
-      typeFile: "comlink.d.ts"
+      typeFile: "comlink.d.ts",
+      /**
+       * Use module Worker in production
+       * for support see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules
+       * @default false
+       */
+      moduleWorker: false
     })
   ],
 }
@@ -103,15 +113,25 @@ See https://github.com/GoogleChromeLabs/comlink#typescript for some drawbacks / 
 
 If you enable types, a `.d.ts` file is generated at runtime that types your imports! This makes typescript realy simple. Ensure that typescript includes the `.d.ts` file.
 
-## Drawbacks
-Not all Browsers support module Workers (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules). This results in some Drawbacks for fastest and best compat.
+## Module Worker
+Not all Browsers support module Workers (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules).
+This results in some Drawbacks for fastest and best support:
 
-### Dev
-You have to develop in a Browser that supports module Workers: (https://caniuse.com/mdn-api_worker_worker_ecmascript_modules)
+For fast development we use module Workers as bundleling the complete worker on the fly is not performant.
+
+In default settings we bundle the whole worker at build to a single file. Therefor all borwsers that supports Workers work in production. 
+You can set the option `moduleWorker` to `true` to also use module worker in production. But that is (currently) not recomended. 
+
+> Note: When Firefox (in development) and Safari (supports it in TP) have shiped the feature the default of `moduleWorker` will probably change to `true`. This will be a breaking change and come with a major version bump.
+
+### What this means:
+
+1. In development you need a browser that supports module Worker (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules)
+2. In production (unless setting `moduleWorker` to `true`) all browsers are supported
 
 ### Production
 Each worker ist bundled in a new context. So no code spliting betwen Workers and / or main app. This results in larger bundles and loadtime!
 
 ## Ressources
-https://github.com/GoogleChromeLabs/comlink
+https://github.com/GoogleChromeLabs/comlink  
 https://github.com/surma/rollup-plugin-comlink

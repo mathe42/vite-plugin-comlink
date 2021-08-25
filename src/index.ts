@@ -28,7 +28,7 @@ interface ComlinkPluginOptions {
   schema?: string;
   /**
    * Internal plugins that are used in worker build.
-   * 
+   *
    * Use only when you know what you do!
    */
   internal_worker_plugins?: string[];
@@ -37,9 +37,15 @@ interface ComlinkPluginOptions {
    * @default comlink.d.ts
    */
   typeFile?: string;
+  /**
+   * Use module Worker in production
+   * @default false
+   */
+  moduleWorker?: boolean;
 }
 
 export default function comlink({
+  moduleWorker = false,
   types = false,
   schema = "comlink:",
   typeFile = "comlink.d.ts",
@@ -149,7 +155,7 @@ export default function comlink({
         // URL used to load worker
         let url = `/@id/${baseId}`;
 
-        if (isBuild) {
+        if (isBuild && !moduleWorker) {
           // Bundle worker file in new context
           const bundle = await rollup({
             input: baseId,
@@ -187,10 +193,20 @@ export default function comlink({
             source: code,
           })}__`;
         }
+
+        if (isBuild && moduleWorker) {
+          url = baseId;
+        }
+
         return `
           import { wrap } from 'comlink'
 
-          export default () => wrap(new Worker('${url}'${isBuild ? ", {type: 'module'}" : ""}))
+          export default () => {
+            const worker = new Worker('${url}'${
+              !isBuild || moduleWorker ? ", {type: 'module'}" : ""
+            })
+            wrap(worker)
+          }
         `;
       }
 
