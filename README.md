@@ -22,11 +22,11 @@ import comlink from 'vite-plugin-comlink'
 
 export default {
   plugins: [
-    comlink({types: true})
+    comlink()
   ],
 }
 ```
-### Useage
+### Usage
 ```ts
 // worker.ts
 export const add = (a: number, b: number) => a + b
@@ -41,6 +41,40 @@ const result = await instance.add(2, 3)
 result === 5
 ```
 
+With a sharedWorker:
+
+```ts
+// worker.ts
+export const add = (a: number, b: number) => a + b
+
+// main.ts
+import add_worker from 'comlink-shared:./worker'
+
+// Create Worker
+const instance = add_worker()
+const result = await instance.add(2, 3)
+
+result === 5
+```
+
+With serviceWorker (note that this might be buggy!):
+
+```ts
+// worker.ts
+export const add = (a: number, b: number) => a + b
+
+// main.ts
+import add_worker from 'comlink-sw:./worker'
+
+// Create Worker
+const instance = add_worker()
+// access methods / values from instance.cl This makes change of the serviceWorker while on the page posible - (but internal state might change!)
+const result = await instance.cl.add(2, 3)
+
+result === 5
+```
+
+
 See the comlink docs (https://github.com/GoogleChromeLabs/comlink) for more examples. 
 
 
@@ -54,58 +88,17 @@ export default {
   plugins: [
     comlink({
       /**
-       * Enable type generation
-       * @default false
-       */
-      types: false,
-      /**
-       * Set import schema to use
-       * @default comlink:
-       */
-      schema: "comlink:",
-      /**
-       * Internal plugins that are used in worker build.
-       * 
-       * Use only when you know what you do!
-       * 
-       * @default "see source code"
-       */
-      internal_worker_plugins: [],
-      /**
        * Filename of type file
-       * @default comlink.d.ts
+       * Set to a filename (releative to root) if you want to have
+       * auto generated type files for your imports.
+       * HIGHLY RECOMENDED WHEN USEING TYPESCRIPT!
+       * @default false
        */
       typeFile: "comlink.d.ts",
-      /**
-       * Use module Worker in production
-       * for support see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules
-       * @default false
-       */
-      moduleWorker: false
     })
   ],
 }
 ```
-
-## Plugins in Worker build
-To use a Plugin in the worker build you have to wrap it in the exportet `inWorker` function like this:
-
-```ts
-// vite.config.ts
-
-import { inWorker } from 'vite-plugin-comlink'
-import customPlugin from 'vite-plugin-custom'
-
-export default {
-  plugins: [
-    inWorker(customPlugin({
-      optionA: true
-    }))
-  ]
-}
-```
-
-This will add an internal flag so we can detect these modules.
 
 
 ## Types
@@ -119,7 +112,7 @@ This results in some Drawbacks for fastest and best support:
 
 For fast development we use module Workers as bundleling the complete worker on the fly is not performant.
 
-In default settings we bundle the whole worker at build to a single file. Therefor all borwsers that supports Workers work in production. 
+In default settings we bundle the whole worker at build to a single file. Therefor all browsers that supports Workers work in production. 
 You can set the option `moduleWorker` to `true` to also use module worker in production. But that is (currently) not recomended. 
 
 > Note: When Firefox (in development) and Safari (supports it in TP) have shiped the feature the default of `moduleWorker` will probably change to `true`. This will be a breaking change and come with a major version bump.
@@ -130,7 +123,13 @@ You can set the option `moduleWorker` to `true` to also use module worker in pro
 2. In production (unless setting `moduleWorker` to `true`) all browsers are supported
 
 ## HMR
-This module doesn't support full HMR out of the box. But if you implement accepting HMR updates (probably only plugin authors that use this plugin will do it). All workers are killed at a HMR update. 
+I currently work on an implementation on this. (Hope to release this with 2.1 or 2.2)
+
+## Breaking changes
+### v2.0
+I rewrote most of the plugin to use my own custom worker implementation. This makes the code much more easy to maintain and understand. And you can even add some custom worker config that you can configure.
+
+
 
 ## Ressources
 https://github.com/GoogleChromeLabs/comlink  
