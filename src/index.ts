@@ -38,9 +38,11 @@ export default function comlink({
 
     // Remove duplicates
     typeDefs = typeDefs.filter(
-      (v, i, t) => t.findIndex(([id, real]) => id === v[0] && real == v[1]) === i);
+      (v, i, t) =>
+        t.findIndex(([id, real]) => id === v[0] && real == v[1]) === i
+    );
 
-    const content = Object.values(typeDefs)
+    const content = typeDefs
       .map(([id, real]) => moduleDefinition(id, real))
       .join("\n");
 
@@ -68,18 +70,20 @@ export default function comlink({
 
           if (!real) throw new Error("Comlink Worker File Not Found!");
 
+          const importPath = real.id.startsWith(root!)
+            ? real.id.slice(root!.length)
+            : real.id;
+
           typeDefs.push([
             id,
-            real.id.endsWith(".ts")
-              ? real.id.substr(0, real.id.length - 3)
-              : real.id,
+            "." +
+              (importPath.endsWith(".ts")
+                ? importPath.substr(0, importPath.length - 3)
+                : importPath),
           ]);
           writeTypeDefs();
 
-          return (
-            publicIds[keys[i]] +
-            (real.id.startsWith(root!) ? real.id.slice(root!.length) : real.id)
-          );
+          return publicIds[keys[i]] + importPath;
         }
       }
 
