@@ -1,7 +1,7 @@
 import { Plugin } from "vite";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { posix as path } from "path";
-const { join } = path;
+const { join, relative } = path;
 
 export interface ComlinkPluginOptions {
   customConfigs?: Record<`${string}:`, string>;
@@ -40,7 +40,7 @@ export default function comlink({
     typeDefs = typeDefs.filter((v, i, t) => t.indexOf(v) === i);
 
     const content = Object.values(typeDefs)
-      .map(([id, real]) => moduleDefinition(id, real))
+      .map(([id, real]) => moduleDefinition(id, real, root!))
       .join("\n");
 
     writeFileSync(join(root, typeFile), content);
@@ -178,18 +178,17 @@ export default function comlink({
   };
 }
 
-function moduleDefinition(id: string, real: string): string {
+function moduleDefinition(id: string, real: string, root: string): string {
+  const rel = real.startsWith('/') ? `./${relative(root, real)}` : real;
   if (id.startsWith("comlink-sw:")) {
-    return `
-      declare module "${id}" {
-        const mod: () => {sw: import("comlink").Remote<typeof import("${real}")>}
-        export default mod
-      }`;
+    return `declare module "${id}" {
+  const mod: () => {sw: import("comlink").Remote<typeof import("${rel}")>}
+  export default mod
+}`;
   } else {
-    return `
-      declare module "${id}" {
-        const mod: () => import("comlink").Remote<typeof import("${real}")>
-        export default mod
-      }`;
+    return `declare module "${id}" {
+  const mod: () => import("comlink").Remote<typeof import("${rel}")>
+  export default mod
+}`;
   }
 }
