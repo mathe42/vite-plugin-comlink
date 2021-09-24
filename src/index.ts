@@ -13,6 +13,7 @@ const internalIds: string[] = [
   "comlink@worker:",
   "comlink@sharedWorker:",
   "comlink@serviceWorker:",
+  "comlink@main-sharedWorker:",
 ];
 
 export default function comlink({
@@ -21,7 +22,7 @@ export default function comlink({
 }: ComlinkPluginOptions = {}): Plugin {
   const publicIds: Record<string, string> = {
     "comlink:": "comlink@main:worker:comlink@worker:",
-    "comlink-shared:": "comlink@main:sharedWorker:comlink@sharedWorker:",
+    "comlink-shared:": "comlink@main-sharedWorker:sharedWorker:comlink@sharedWorker:",
     "comlink-sw:": "comlink@main-sw:serviceworker:comlink@serviceWorker:",
     ...customConfigs,
   };
@@ -61,10 +62,18 @@ export default function comlink({
 
           if (!real) throw new Error("Comlink Worker File Not Found!");
 
-          typeDefs.push([id, real.id]);
+          typeDefs.push([
+            id,
+            real.id.endsWith(".ts")
+              ? real.id.substr(0, real.id.length - 3)
+              : real.id,
+          ]);
           writeTypeDefs();
 
-          return publicIds[keys[i]] + real.id;
+          return (
+            publicIds[keys[i]] +
+            (real.id.startsWith(root!) ? real.id.slice(root!.length) : real.id)
+          );
         }
       }
 
@@ -94,7 +103,13 @@ export default function comlink({
 
             export default () => wrap(new createWorker())
           `;
+        case "comlink@main-sharedWorker:":
+          return `
+            import { wrap } from 'comlink'
+            import createWorker from ${JSON.stringify(realFile)}
 
+            export default () => wrap((new createWorker()).port)
+          `;
         case "comlink@worker:":
           return `
             import * as workerContent from ${JSON.stringify(realFile)}

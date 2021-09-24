@@ -16,13 +16,13 @@ You have to install `vite-plugin-worker` for this plugin to work properly. Quick
 
 ```ts
 import comlink from 'vite-plugin-comlink'
-import worker, { bundleHelper } from 'vite-plugin-worker'
+import worker, { pluginHelper } from 'vite-plugin-worker'
 
 export default {
   plugins: [
     comlink(),
-    bundleHelper(),
-    worker()
+    pluginHelper(),
+    worker({})
   ],
 }
 ```
