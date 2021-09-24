@@ -73,9 +73,9 @@ export default {
       internal_worker_plugins: [],
       /**
        * Filename of type file
-       * @default comlink.d.ts
+       * @default comlink-workers.d.ts
        */
-      typeFile: "comlink.d.ts",
+      typeFile: "comlink-workers.d.ts",
       /**
        * Use module Worker in production
        * for support see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules

@@ -34,7 +34,7 @@ interface ComlinkPluginOptions {
   internal_worker_plugins?: string[];
   /**
    * Filename of type file
-   * @default comlink.d.ts
+   * @default comlink-workers.d.ts
    */
   typeFile?: string;
   /**
@@ -48,7 +48,7 @@ export default function comlink({
   moduleWorker = false,
   types = false,
   schema = "comlink:",
-  typeFile = "comlink.d.ts",
+  typeFile = "comlink-workers.d.ts",
   internal_worker_plugins = [
     "alias",
     "vite:modulepreload-polyfill",
