@@ -36,8 +36,9 @@ export default function comlink({
   function writeTypeDefs() {
     if (!typeFile || !root) return;
 
-    // Remove dublicates
-    typeDefs = typeDefs.filter((v, i, t) => t.indexOf(v) === i);
+    // Remove duplicates
+    typeDefs = typeDefs.filter(
+      (v, i, t) => t.findIndex(([id, real]) => id === v[0] && real == v[1]) === i);
 
     const content = Object.values(typeDefs)
       .map(([id, real]) => moduleDefinition(id, real))
