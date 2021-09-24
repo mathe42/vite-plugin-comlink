@@ -4,11 +4,27 @@ Use WebWorkers with comlink.
 
 This plugin removes the need to call `expose`, `wrap` from comlink and also you don't need to create the worker on your own. This plugin provides a function that returns for each call a new wraped worker with all exposed values and functions.
 
-### Install
+## Install
 
 ```sh
 npm i --save-dev vite-plugin-comlink # yarn add -D vite-plugin-comlink
 npm i --save comlink # yarn add comlink
+```
+
+### vite-plugin-worker
+You have to install `vite-plugin-worker` for this plugin to work properly. Quick setup (with comlink included) would be in the `vite.config.js`:
+
+```ts
+import comlink from 'vite-plugin-comlink'
+import worker, { bundleHelper } from 'vite-plugin-worker'
+
+export default {
+  plugins: [
+    comlink(),
+    bundleHelper(),
+    worker()
+  ],
+}
 ```
 
 ### Comlink install
@@ -26,7 +42,7 @@ export default {
   ],
 }
 ```
-### Usage
+## Usage
 ```ts
 // worker.ts
 export const add = (a: number, b: number) => a + b
@@ -94,7 +110,7 @@ export default {
        * HIGHLY RECOMENDED WHEN USEING TYPESCRIPT!
        * @default false
        */
-      typeFile: "comlink.d.ts",
+      typeFile: "comlink-workers.d.ts",
     })
   ],
 }

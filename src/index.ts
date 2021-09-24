@@ -116,7 +116,6 @@ export default function comlink({
             self.addEventListener("message", (event) => {
               if (event.data.comlinkInit) {
                 expose(workerContent, event.data.port);
-                return;
               }
             });
           `;
@@ -125,7 +124,7 @@ export default function comlink({
             import { wrap, releaseProxy } from 'comlink'
             import registerSW from ${JSON.stringify(realFile)}
 
-            const COMLINK_PROXY = {cl: null}
+            const COMLINK_PROXY = {sw: null}
 
             async function initComlink() {
               const { port1, port2 } = new MessageChannel();
@@ -135,11 +134,11 @@ export default function comlink({
               };
               navigator.serviceWorker.controller.postMessage(msg, [port1]);
               
-              if(COMLINK_PROXY.cl) {
+              if(COMLINK_PROXY.sw) {
                 proxy[releaseProxy]();
               }
 
-              COMLINK_PROXY.cl = wrap(port2)
+              COMLINK_PROXY.sw = wrap(port2)
             }
 
 
@@ -163,7 +162,7 @@ function moduleDefinition(id: string, real: string): string {
   if (id.startsWith("comlink-sw:")) {
     return `
       declare module "${id}" {
-        const mod: () => {cl: import("comlink").Remote<typeof import("${real}")>}
+        const mod: () => {sw: import("comlink").Remote<typeof import("${real}")>}
         export default mod
       }`;
   } else {
