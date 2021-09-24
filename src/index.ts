@@ -47,7 +47,10 @@ export default function comlink({
       .join("\n");
 
     writeFileSync(join(root, typeFile), content);
-    writeFileSync(typeSaveFile!, JSON.stringify(typeDefs));
+
+    if (typeSaveFile) {
+      writeFileSync(typeSaveFile, JSON.stringify(typeDefs));
+    }
   }
 
   return {
@@ -56,9 +59,11 @@ export default function comlink({
       writeTypeDefs();
     },
     configResolved(config) {
-      typeSaveFile = join(config.cacheDir!, "comlink.json");
-      if (existsSync(typeSaveFile)) {
-        typeDefs = JSON.parse(readFileSync(typeSaveFile, "utf-8"));
+      if (existsSync(config.cacheDir!)) {
+        typeSaveFile = join(config.cacheDir!, "comlink.json");
+        if (existsSync(typeSaveFile)) {
+          typeDefs = JSON.parse(readFileSync(typeSaveFile, "utf-8"));
+        }
       }
       root = config.root;
     },
