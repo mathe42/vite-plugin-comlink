@@ -225,7 +225,7 @@ export default function comlink({
               !isBuild || moduleWorker ? ", {type: 'module'}" : ""
             })
             ${!isBuild ? "workers.push(worker)" : ""}
-            wrap(worker)
+            return wrap(worker)
           }
         `;
       }
