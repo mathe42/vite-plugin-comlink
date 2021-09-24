@@ -23,7 +23,8 @@ export default function comlink({
 }: ComlinkPluginOptions = {}): Plugin {
   const publicIds: Record<string, string> = {
     "comlink:": "comlink@main:worker:comlink@worker:",
-    "comlink-shared:": "comlink@main-sharedWorker:sharedWorker:comlink@sharedWorker:",
+    "comlink-shared:":
+      "comlink@main-sharedWorker:sharedWorker:comlink@sharedWorker:",
     "comlink-sw:": "comlink@main-sw:serviceworker:comlink@serviceWorker:",
     ...customConfigs,
   };
@@ -34,6 +35,9 @@ export default function comlink({
 
   function writeTypeDefs() {
     if (!typeFile || !root) return;
+
+    // Remove dublicates
+    typeDefs = typeDefs.filter((v, i, t) => t.indexOf(v) === i);
 
     const content = Object.values(typeDefs)
       .map(([id, real]) => moduleDefinition(id, real))
