@@ -1,6 +1,7 @@
 import { Plugin } from "vite";
 import { existsSync, readFileSync, writeFileSync } from "fs";
-import { join } from "path/posix";
+import { posix as path } from "path/posix";
+const { join } = path;
 
 export interface ComlinkPluginOptions {
   customConfigs?: Record<`${string}:`, string>;
