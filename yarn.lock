@@ -800,10 +800,10 @@ ts-interface-checker@^0.1.9:
   resolved "https://registry.yarnpkg.com/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz#784fd3d679722bc103b1b4b8030bcddb5db2a699"
   integrity sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==
 
-tsup@5.11.1:
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/tsup/-/tsup-5.11.1.tgz#a0f457e4e1e7ac68c7914e01ce4dbab647ba4828"
-  integrity sha512-4J1kknLCT7dlVoyoGwSl62cUo7QIar89pdOFhK5V5T81M9G2MR1WFbPlFnc6kHC10qgLBeoJdjnrnscJn9yc/w==
+tsup@5.11.9:
+  version "5.11.9"
+  resolved "https://registry.yarnpkg.com/tsup/-/tsup-5.11.9.tgz#2feab9d1c6c2ac14840eb6a1f40c91c3a6c367f2"
+  integrity sha512-APFcd9qKblMVO35O5OyIcfa4lwBrVNinwtifUojO78I6j0aDhS4fQ06gq6vF1b/+Z83pYDWNb0R2fmO9PX3IVQ==
   dependencies:
     bundle-require "^2.1.8"
     cac "^6.7.12"
