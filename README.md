@@ -138,6 +138,21 @@ You can set the option `moduleWorker` to `true` to also use module worker in pro
 1. In development you need a browser that supports module Worker (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules)
 2. In production (unless setting `moduleWorker` to `true`) all browsers are supported
 
+### Change that (add dev-support for FireFox, IE, ...)
+If you don't want this behavior you can use the `customConfigs` and overwrite the default with a custom setting (here `worker-iife:`).
+
+```ts
+{
+  plugins: [
+    comlink({
+      customConfigs: {
+        "comlink:": "comlink@main:worker-iife:comlink@worker:",
+      }
+    })
+  ]
+}
+```
+
 ## HMR
 I currently work on an implementation on this. (Hope to release this with 2.1 or 2.2)
 
