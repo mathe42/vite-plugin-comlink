@@ -69,7 +69,7 @@ export default function comlink({
     },
     async resolveId(id, importer) {
       const keys = Object.keys(publicIds);
-      const typeFileDirectory = join(root!, dirname(typeFile != false ? dirname(typeFile) : ""))
+      const typeFileDirectory = join(root!, typeFile != false ? dirname(typeFile) : "")
       for (let i = 0; i < keys.length; i++) {
         if (id.startsWith(keys[i])) {
           const real = await this.resolve(id.slice(keys[i].length), importer);
