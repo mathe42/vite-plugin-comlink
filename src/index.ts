@@ -1,7 +1,7 @@
 import { Plugin } from "vite";
 import { existsSync, readFileSync, writeFileSync } from "fs";
 import { posix as path } from "path";
-const { join } = path;
+const { join, relative, dirname } = path;
 
 export interface ComlinkPluginOptions {
   customConfigs?: Record<`${string}:`, string>;
@@ -69,22 +69,21 @@ export default function comlink({
     },
     async resolveId(id, importer) {
       const keys = Object.keys(publicIds);
+      const typeFileDirectory = join(root!, dirname(typeFile != false ? dirname(typeFile) : ""))
       for (let i = 0; i < keys.length; i++) {
         if (id.startsWith(keys[i])) {
           const real = await this.resolve(id.slice(keys[i].length), importer);
 
           if (!real) throw new Error("Comlink Worker File Not Found!");
 
-          const importPath = real.id.startsWith(root!)
-            ? real.id.slice(root!.length)
-            : real.id;
-
+          const importPath = real.id;
+          const relativeImport = relative(typeFileDirectory, importPath);
+          const relativeImportPrefixed = relativeImport.startsWith("../") ? relativeImport : `./${relativeImport}`
           typeDefs.push([
             id,
-            "." +
-              (importPath.endsWith(".ts")
-                ? importPath.substr(0, importPath.length - 3)
-                : importPath),
+              (relativeImportPrefixed.endsWith(".ts")
+                ? relativeImportPrefixed.substr(0, relativeImportPrefixed.length - 3)
+                : relativeImportPrefixed),
           ]);
           writeTypeDefs();
 
