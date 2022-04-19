@@ -150,6 +150,7 @@ export default function comlink({
             });
           `;
         case "comlink@main-sw:":
+          console.warn(`[vite-plugin-comlink] the usage with service worker will be removed in version 3!`)
           return `
             import { wrap, releaseProxy } from 'comlink'
             import registerSW from ${JSON.stringify(realFile)}
