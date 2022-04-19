@@ -39,27 +39,57 @@ export default {
   ],
 }
 ```
-## Usage (with types!)
+## Usage 
 ```ts
-// worker.ts
+// worker.js
 export const add = (a: number, b: number) => a + b
 
 // main.ts
-import * as api from './worker'
 
 // Create Worker
-const instance = new ComlinkWorker<typeof api>(new URL('./worker.js', import.meta.url), {/* normal Worker options*/})
+const instance = new ComlinkWorker(new URL('./worker.js', import.meta.url), {/* normal Worker options*/})
 const result = await instance.add(2, 3)
 
 result === 5
 
 
 // Create SharedWorker
-const instance = new ComlinkSharedWorker<typeof api>(new URL('./worker.js', import.meta.url), {/* normal Worker options*/})
+const instance = new ComlinkSharedWorker(new URL('./worker.js', import.meta.url), {/* normal Worker options*/})
 const result = await instance.add(2, 3)
 
 result === 5
 ```
+
+### With typescript
+Add 
+
+```ts
+/// <reference types="vite-plugin-comlink/client" />
+```
+to your vite-env.d.ts file or make shure typescript will use `vite-plugin-comlink/client`.
+
+```ts
+// worker.ts
+export const add = (a: number, b: number) => a + b
+
+// main.ts
+
+// Create Worker
+const instance = new ComlinkWorker<typeof import('./worker')>(new URL('./worker', import.meta.url), {/* normal Worker options*/})
+const result = await instance.add(2, 3)
+
+result === 5
+
+
+// Create SharedWorker
+const instance = new ComlinkSharedWorker<typeof import('./worker')>(new URL('./worker', import.meta.url), {/* normal Worker options*/})
+const result = await instance.add(2, 3)
+
+result === 5
+```
+
+
+
 
 ## Inline, ServiceWorker
 Are no longer supported. If vite adds support I will add it here.
@@ -82,8 +112,6 @@ This is the same behavior as vite and it is NOT CHANGEABLE!
 
 ## Migration guide from v2 to v3
 Basicly check all code for usage and change it to new syntax.
-
-
 
 ## Ressources
 https://github.com/GoogleChromeLabs/comlink  
