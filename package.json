@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-comlink",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "Comlink for Vite",
   "repository": {
     "type": "git",
@@ -13,17 +13,21 @@
   "license": "MIT",
   "scripts": {
     "build": "tsup src/index.ts --dts --format cjs,esm",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "pnpm build"
   },
   "devDependencies": {
-    "@types/node": "16.11.17",
-    "tsup": "5.11.9",
-    "typescript": "4.5.4",
-    "vite": "2.7.10"
+    "@types/node": "17.0.25",
+    "json5": "^2.2.1",
+    "magic-string": "^0.26.1",
+    "tsup": "5.12.5",
+    "typescript": "4.6.3",
+    "vite": "2.9.5"
   },
   "peerDependencies": {
     "comlink": "^4.3.1",
     "vite": "^2.5.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "comlink": "^4.3.1"
+  }
 }
