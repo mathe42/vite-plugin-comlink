@@ -29,28 +29,28 @@ export function comlink({
           const realID = normalizePath(id.replace(urlPrefix_normal, ""));
 
           return `
-                    import {expose} from 'comlink'
-                    import * as api from '${normalizePath(realID)}'
+            import {expose} from 'comlink'
+            import * as api from '${normalizePath(realID)}'
 
-                    expose(api)
-                `;
+            expose(api)
+          `;
         }
 
         if (id.includes(urlPrefix_shared)) {
           const realID = normalizePath(id.replace(urlPrefix_normal, ""));
 
           return `
-                    import {expose} from 'comlink'
-                    import * as api from '${normalizePath(realID)}'
+            import {expose} from 'comlink'
+            import * as api from '${normalizePath(realID)}'
 
-                    addEventListener('connect', (ev) => {
-                        const port = event.ports[0];
-                          
-                        expose(api, port);
-                        // We might need this later...
-                        // port.start()
-                    })
-                `;
+            addEventListener('connect', (ev) => {
+                const port = event.ports[0];
+                  
+                expose(api, port);
+                // We might need this later...
+                // port.start()
+            })
+          `;
         }
       },
       transform(code: string, id: string) {
@@ -59,8 +59,6 @@ export function comlink({
           !code.includes("ComlinkSharedWorker")
         )
           return;
-
-        console.log(id);
 
         const workerSearcher =
           /\bnew\s+(ComlinkWorker|ComlinkSharedWorker)\s*\(\s*new\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*\)\s*(.*)\)/g;
