@@ -48,22 +48,21 @@ export const add = (a: number, b: number) => a + b
 import * as api from './worker'
 
 // Create Worker
-const instance: ComlinkRemote<typeof api> = new ComlinkWorker(new URL('./worker.js', import.meta.url), {/* normal Worker options*/})
+const instance = new ComlinkWorker<typeof api>(new URL('./worker.js', import.meta.url), {/* normal Worker options*/})
+const result = await instance.add(2, 3)
+
+result === 5
+
+
+// Create SharedWorker
+const instance = new ComlinkSharedWorker<typeof api>(new URL('./worker.js', import.meta.url), {/* normal Worker options*/})
 const result = await instance.add(2, 3)
 
 result === 5
 ```
 
-## Inline, SharedWorker, ServiceWorker
-Are not supported. If vite supports inline worker I will add it! Shared worker I will add as I need them in my own project but in a way with WebLocksApi so we can have a Workaround for Browser not supporting SharedWorker.
-
-For shared Worker I will add a `ComlinkSharedWorker` class.
-
-## ToDo
-Before release I need to add the following things
-- [ ] Types (`ComlinkWorker`) global type
-- [ ] Docs for `replacement` option
-- [ ] State Aware Worker (extra Plugin or integrate it here)
+## Inline, ServiceWorker
+Are no longer supported. If vite adds support I will add it here.
 
 ## Migration guide from v2 to v3
 Basicly check all code for usage and change it to new syntax.
