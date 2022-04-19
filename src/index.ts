@@ -9,7 +9,7 @@ const urlPrefix_shared = 'comlink-shared:'
 
 let mode = ''
 
-export function comlink({replacement = 'Worker'} = {}): Plugin {
+export function comlink({replacement = 'Worker', replacementShared = 'SharedWorker'} = {}): Plugin {
     return {
         configResolved(conf) {
             mode = conf.mode
@@ -38,7 +38,7 @@ export function comlink({replacement = 'Worker'} = {}): Plugin {
                         const port = event.ports[0];
                           
                         expose(api, port);
-
+                        // We might need this later...
                         // port.start()
                     })
                 `;
@@ -48,18 +48,18 @@ export function comlink({replacement = 'Worker'} = {}): Plugin {
             if (!code.includes('ComlinkWorker') && !code.includes('ComlinkSharedWorker'))
                 return;
 
-            const workerSearcher = /\bnew\s+(ComlinkWorker|ComlinkSharedWorker)\s*(<\s*typeof\s*[a-zA-Z]+\s*>)?\s*\(\s*new\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*\)\s*(.*)\)/g;
+            const workerSearcher = /\bnew\s+(ComlinkWorker|ComlinkSharedWorker)\s*\(\s*new\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*\)\s*(.*)\)/g;
 
             let s: MagicString = new MagicString(code);
 
-            function workerReplacer(match: string, type: 'ComlinkWorker' | 'ComlinkSharedWorker', ts: string, url: string, rest: string) {
+            function workerReplacer(match: string, type: 'ComlinkWorker' | 'ComlinkSharedWorker', url: string, rest: string) {
                 url = url.slice(1, url.length - 1);
 
                 const index = code.indexOf(match);
                 
                 const i = rest.indexOf(',')
 
-                let reClass = replacement
+                let reClass = type === 'ComlinkWorker' ? replacement : replacementShared
 
                 if(i!== -1) {
                     const opt = JSON5.parse(rest.slice(i+1).split(')')[0].trim())
