@@ -38,6 +38,8 @@ export function comlink({replacement = 'Worker'} = {}): Plugin {
                         const port = event.ports[0];
                           
                         expose(api, port);
+
+                        // port.start()
                     })
                 `;
             }
