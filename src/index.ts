@@ -4,8 +4,8 @@ import { Plugin, normalizePath } from "vite";
 const importMetaUrl = `${'import'}.meta.url`
 
 
-const urlPrefix_normal = 'comlink:'
-const urlPrefix_shared = 'comlink-shared:'
+const urlPrefix_normal = '____:com_link:'
+const urlPrefix_shared = '____:com_link-shared:'
 
 let mode = ''
 
@@ -15,6 +15,9 @@ export function comlink({replacement = 'Worker', replacementShared = 'SharedWork
             mode = conf.mode
         },
         name: 'ex',
+        resolveId(id) {
+            if(id.includes(urlPrefix_normal) || id.includes(urlPrefix_shared)) return id
+        },
         async load(id) {
             if (id.includes(urlPrefix_normal)) {
                 const realID = normalizePath(id.replace(urlPrefix_normal, ''))
@@ -34,7 +37,7 @@ export function comlink({replacement = 'Worker', replacementShared = 'SharedWork
                     import {expose} from 'comlink'
                     import * as api from '${normalizePath(realID)}'
 
-                    addEventListener('connect' (ev) => {
+                    addEventListener('connect', (ev) => {
                         const port = event.ports[0];
                           
                         expose(api, port);
@@ -47,6 +50,8 @@ export function comlink({replacement = 'Worker', replacementShared = 'SharedWork
         transform(code: string, id: string) {
             if (!code.includes('ComlinkWorker') && !code.includes('ComlinkSharedWorker'))
                 return;
+
+            console.log(id)
 
             const workerSearcher = /\bnew\s+(ComlinkWorker|ComlinkSharedWorker)\s*\(\s*new\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*\)\s*(.*)\)/g;
 
