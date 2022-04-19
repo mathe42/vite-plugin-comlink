@@ -4,7 +4,8 @@ import { Plugin, normalizePath } from "vite";
 const importMetaUrl = `${'import'}.meta.url`
 
 
-const urlPrefix = 'comlink:'
+const urlPrefix_normal = 'comlink:'
+const urlPrefix_shared = 'comlink-shared:'
 
 let mode = ''
 
@@ -15,14 +16,29 @@ export function comlink({replacement = 'Worker'} = {}): Plugin {
         },
         name: 'ex',
         async load(id) {
-            if (id.includes(urlPrefix)) {
-                const realID = normalizePath(id.replace(urlPrefix, ''))
+            if (id.includes(urlPrefix_normal)) {
+                const realID = normalizePath(id.replace(urlPrefix_normal, ''))
                 
                 return `
                     import {expose} from 'comlink'
                     import * as api from '${normalizePath(realID)}'
 
                     expose(api)
+                `;
+            }
+
+            if(id.includes(urlPrefix_shared)) {
+                const realID = normalizePath(id.replace(urlPrefix_normal, ''))
+                
+                return `
+                    import {expose} from 'comlink'
+                    import * as api from '${normalizePath(realID)}'
+
+                    addEventListener('connect' (ev) => {
+                        const port = event.ports[0];
+                          
+                        expose(api, port);
+                    })
                 `;
             }
         },
@@ -35,8 +51,6 @@ export function comlink({replacement = 'Worker'} = {}): Plugin {
             let s: MagicString = new MagicString(code);
 
             function workerReplacer(match: string, type: 'ComlinkWorker' | 'ComlinkSharedWorker', ts: string, url: string, rest: string) {
-                if(type === 'ComlinkSharedWorker') throw new Error("Shared Worker are currently not supported (WIP)");
-
                 url = url.slice(1, url.length - 1);
 
                 const index = code.indexOf(match);
@@ -59,7 +73,7 @@ export function comlink({replacement = 'Worker'} = {}): Plugin {
                     rest = ',' + JSON.stringify(opt) + ')'
                 }
 
-                const insertCode = `wrap(new ${reClass}(new URL('${urlPrefix}${url}', ${importMetaUrl})${rest})`;
+                const insertCode = `wrap(new ${reClass}(new URL('${type === 'ComlinkWorker' ? urlPrefix_normal : urlPrefix_shared}${url}', ${importMetaUrl})${rest}${type === 'ComlinkSharedWorker' ? '.port' : ''})`;
 
                 s.overwrite(index, index + match.length, insertCode);
                 return match;
