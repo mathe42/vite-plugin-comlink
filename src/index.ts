@@ -14,6 +14,17 @@ export function comlink({
   replacement = "Worker",
   replacementShared = "SharedWorker",
 } = {}): Plugin[] {
+  // Legacy Argument check to be removed in 3.1
+  const arg = arguments[0]
+
+  if('customConfig' in arg) {
+    console.warn(`[vite-plugin-comlink] The customConfig option is no longer supported. Please remove it.`)
+  }
+
+  if('typeFile ' in arg) {
+    console.warn(`[vite-plugin-comlink] The typeFile option is no longer supported. Please remove it.`)
+  }
+
   return [
     {
       configResolved(conf) {
@@ -119,6 +130,7 @@ export function comlink({
         };
       },
     },
+    // Will be removed in v4
     {
       name: "comlink:legacy",
       async resolveId(id: string, importer: string) {
@@ -159,7 +171,7 @@ export function comlink({
         console.warn(
           `[vite-plugin-comlink]: The usage of \`import worker from ${JSON.stringify(
             id
-          )}\` is deprecated please move to the \`new ComlinkWorker(...)\` syntax.`
+          )}\` is deprecated please move to the \`new ComlinkSharedWorker(...)\` syntax.`
         );
 
         const realID = await this.resolve(
