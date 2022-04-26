@@ -19,7 +19,7 @@
     "@types/node": "16.11.17",
     "tsup": "5.11.9",
     "typescript": "4.5.4",
-    "vite": "2.7.10"
+    "vite": "2.9.6"
   },
   "peerDependencies": {
     "comlink": "^4.3.1",
