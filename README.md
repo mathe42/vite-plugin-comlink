@@ -23,6 +23,11 @@ export default {
   plugins: [
     comlink()
   ],
+  worker: {
+    plugins: [
+      comlink()
+    ]
+  }
 }
 ```
 
@@ -39,6 +44,11 @@ export default {
   plugins: [
     comlink()
   ],
+  worker: {
+    plugins: [
+      comlink()
+    ]
+  }
 }
 ```
 ## Usage 
@@ -106,13 +116,14 @@ If you wan't a worker to be a module worker at production add `type: 'module'` t
 ### What this means:
 
 1. In development you need a browser that supports module Worker (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules)
-2. In production (unless setting `moduleWorker` to `true`) all browsers are supported
+2. In production all browsers are supported
 
 ## Breaking changes
 ### v2 to v3
 * remove of customConfigs breaking FF support in development for some projects and removing the abbility for inline worker. This is a limitation of vite so if vite adds support of it this plugin will follow
 * remove of typefile. For typescript support please write your own type file or switch to the new syntax.
 * remove of ServiceWorker support. This was considered unstable an it was hacky so it got removed. If vite adds support for building ServiceWorker this will be added!
+* you have to add comlink to `worker.plugins` array.
 ### v3 to v4 (not yet released)
 * the import syntax will be removed you have to switch to the new syntax!
 * Release in end of May or June.
