@@ -6,7 +6,7 @@ specifiers:
   json5: 2.2.1
   magic-string: 0.26.1
   tsup: 5.12.5
-  typescript: 4.6.3
+  typescript: 4.6.4
   vite: 2.9.6
 
 devDependencies:
@@ -14,8 +14,8 @@ devDependencies:
   comlink: 4.3.1
   json5: 2.2.1
   magic-string: 0.26.1
-  tsup: 5.12.5_typescript@4.6.3
-  typescript: 4.6.3
+  tsup: 5.12.5_typescript@4.6.4
+  typescript: 4.6.4
   vite: 2.9.6
 
 packages:
@@ -818,7 +818,7 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /tsup/5.12.5_typescript@4.6.3:
+  /tsup/5.12.5_typescript@4.6.4:
     resolution: {integrity: sha512-lKwzJsB49sDto51QjqOB4SdiBLKRvgTymEBuBCovcksdDwFEz3esrkbf3m497PXntUKVTzcgOfPdTgknMtvufw==}
     hasBin: true
     peerDependencies:
@@ -841,15 +841,15 @@ packages:
       source-map: 0.7.3
       sucrase: 3.21.0
       tree-kill: 1.2.2
-      typescript: 4.6.3
+      typescript: 4.6.4
     transitivePeerDependencies:
       - postcss
       - supports-color
       - ts-node
     dev: true
 
-  /typescript/4.6.3:
-    resolution: {integrity: sha512-yNIatDa5iaofVozS/uQJEl3JRWLKKGJKh6Yaiv0GLGSuhpFJe7P3SbHZ8/yjAHRQwKRoA6YZqlfjXWmVzoVSMw==}
+  /typescript/4.6.4:
+    resolution: {integrity: sha512-9ia/jWHIEbo49HfjrLGfKbZSuWo9iTMwXO+Ca3pRsSpbsMbc7/IU8NKdCZVRRBafVPGnoJeFL76ZOAA84I9fEg==}
     engines: {node: '>=4.2.0'}
     hasBin: true
     dev: true
