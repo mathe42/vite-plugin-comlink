@@ -2,23 +2,21 @@ lockfileVersion: 5.3
 
 specifiers:
   '@types/node': 17.0.25
-  comlink: ^4.3.1
-  json5: ^2.2.1
-  magic-string: ^0.26.1
+  comlink: 4.3.1
+  json5: 2.2.1
+  magic-string: 0.26.1
   tsup: 5.12.5
   typescript: 4.6.3
-  vite: 2.9.5
-
-dependencies:
-  comlink: 4.3.1
+  vite: 2.9.6
 
 devDependencies:
   '@types/node': 17.0.25
+  comlink: 4.3.1
   json5: 2.2.1
   magic-string: 0.26.1
   tsup: 5.12.5_typescript@4.6.3
   typescript: 4.6.3
-  vite: 2.9.5
+  vite: 2.9.6
 
 packages:
 
@@ -119,7 +117,7 @@ packages:
 
   /comlink/4.3.1:
     resolution: {integrity: sha512-+YbhUdNrpBZggBAHWcgQMLPLH1KDF3wJpeqrCKieWQ8RL7atmgsgTQko1XEBK6PsecfopWNntopJ+ByYG1lRaA==}
-    dev: false
+    dev: true
 
   /commander/4.1.1:
     resolution: {integrity: sha512-NOKm8xhkzAjzFx8B2v5OAHT+u5pRQc2UCa2Vq9jYL/31o2wi9mxBA7LIFs3sV5VSC49z6pEhfbMULvShKj26WA==}
@@ -856,8 +854,8 @@ packages:
     hasBin: true
     dev: true
 
-  /vite/2.9.5:
-    resolution: {integrity: sha512-dvMN64X2YEQgSXF1lYabKXw3BbN6e+BL67+P3Vy4MacnY+UzT1AfkHiioFSi9+uiDUiaDy7Ax/LQqivk6orilg==}
+  /vite/2.9.6:
+    resolution: {integrity: sha512-3IffdrByHW95Yjv0a13TQOQfJs7L5dVlSPuTt432XLbRMriWbThqJN2k/IS6kXn5WY4xBLhK9XoaWay1B8VzUw==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
