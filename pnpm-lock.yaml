@@ -5,7 +5,7 @@ specifiers:
   comlink: 4.3.1
   json5: 2.2.1
   magic-string: 0.26.1
-  tsup: 5.12.5
+  tsup: 5.12.6
   typescript: 4.6.4
   vite: 2.9.6
 
@@ -14,7 +14,7 @@ devDependencies:
   comlink: 4.3.1
   json5: 2.2.1
   magic-string: 0.26.1
-  tsup: 5.12.5_typescript@4.6.4
+  tsup: 5.12.6_typescript@4.6.4
   typescript: 4.6.4
   vite: 2.9.6
 
@@ -818,8 +818,8 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /tsup/5.12.5_typescript@4.6.4:
-    resolution: {integrity: sha512-lKwzJsB49sDto51QjqOB4SdiBLKRvgTymEBuBCovcksdDwFEz3esrkbf3m497PXntUKVTzcgOfPdTgknMtvufw==}
+  /tsup/5.12.6_typescript@4.6.4:
+    resolution: {integrity: sha512-tpePOgdMRKRgazF+ujq9k1Fo44PUFUJJjRLtxq87pQrYW/Ub/fu1GpFGLzdUF9qjJ4FX1ykhf2d9mWCNy+jAtg==}
     hasBin: true
     peerDependencies:
       typescript: ^4.1.0
