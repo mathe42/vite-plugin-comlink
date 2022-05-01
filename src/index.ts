@@ -3,8 +3,8 @@ import MagicString from "magic-string";
 import { Plugin, normalizePath } from "vite";
 const importMetaUrl = `${"import"}.meta.url`;
 
-const urlPrefix_normal = "____:com_link:";
-const urlPrefix_shared = "____:com_link-shared:";
+const urlPrefix_normal = "internal:comlink:";
+const urlPrefix_shared = "internal:comlink-shared:";
 const legacyPrefixNormal = "comlink:";
 const legacyPrefixShared = "comlink-shared:";
 
