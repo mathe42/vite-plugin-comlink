@@ -108,6 +108,11 @@ export function comlink({
             }
 
             rest = "," + JSON.stringify(opt) + ")";
+          } else {
+            if(mode === 'development') {
+              rest += ', {type: "module"}'
+            }
+            rest += ')'
           }
 
           const insertCode = `wrap(new ${reClass}(new URL('${
