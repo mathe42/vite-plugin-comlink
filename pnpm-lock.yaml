@@ -7,7 +7,7 @@ specifiers:
   magic-string: 0.26.1
   tsup: 5.12.6
   typescript: 4.6.4
-  vite: 2.9.7
+  vite: 2.9.8
 
 dependencies:
   json5: 2.2.1
@@ -18,7 +18,7 @@ devDependencies:
   comlink: 4.3.1
   tsup: 5.12.6_typescript@4.6.4
   typescript: 4.6.4
-  vite: 2.9.7
+  vite: 2.9.8
 
 packages:
 
@@ -856,8 +856,8 @@ packages:
     hasBin: true
     dev: true
 
-  /vite/2.9.7:
-    resolution: {integrity: sha512-5hH7aNQe8rJiTTqCtPNX/6mIKlGw+1wg8UXwAxDIIN8XaSR+Zx3GT2zSu7QKa1vIaBqfUODGh3vpwY8r0AW/jw==}
+  /vite/2.9.8:
+    resolution: {integrity: sha512-zsBGwn5UT3YS0NLSJ7hnR54+vUKfgzMUh/Z9CxF1YKEBVIe213+63jrFLmZphgGI5zXwQCSmqIdbPuE8NJywPw==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
