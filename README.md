@@ -32,7 +32,7 @@ export default {
 ```
 
 ### Comlink install
-As you don't want to wait for a new release for this plugin when a new version of comlink is releast this plugin has comlink as a peer dependencie so you can install the version of comlink that you need.
+As you don't want to wait for a new release for this plugin when a new version of comlink is released, this plugin has comlink as a peer dependency so you can install the version of comlink that you need.
 
 ### Add it to vite.config.js
 
@@ -72,13 +72,13 @@ const result = await instance.add(2, 3)
 result === 5
 ```
 
-### With typescript
+### With TypeScript
 Add 
 
 ```ts
 /// <reference types="vite-plugin-comlink/client" />
 ```
-to your vite-env.d.ts file or make shure typescript will use `vite-plugin-comlink/client`.
+to your vite-env.d.ts file to make sure typescript will use `vite-plugin-comlink/client`.
 
 ```ts
 // worker.ts
@@ -103,15 +103,16 @@ result === 5
 
 ## Module Worker
 Not all Browsers support module Workers (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules).
-This results in some Drawbacks for fastest and best support:
 
-For fast development we use module Workers as bundleling the complete worker on the fly is not performant.
+This results in some drawbacks for fastest and best support:
 
-In default settings we bundle the whole worker at build to a single file. Therefor all browsers that supports Workers work in production. 
+For fast development we use module Workers as bundling the complete worker on the fly is not performant.
+
+In default settings we bundle the whole worker at build to a single file. Therefore all browsers that support Workers, work in production. 
 
 This is the same behavior as vite and it is NOT CHANGEABLE!
 
-If you wan't a worker to be a module worker at production add `type: 'module'` to the worker constructor options.
+If you want a worker to be a module worker in production, add `type: 'module'` to the worker constructor options.
 
 ### What this means:
 
@@ -128,6 +129,6 @@ If you wan't a worker to be a module worker at production add `type: 'module'` t
 * the import syntax will be removed you have to switch to the new syntax!
 * Release in end of May or June.
 
-## Ressources
+## Resources
 https://github.com/GoogleChromeLabs/comlink  
 https://github.com/surma/rollup-plugin-comlink
