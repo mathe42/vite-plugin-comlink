@@ -17,7 +17,7 @@ npm i --save comlink # yarn add comlink
 Quick setup (with comlink included) would be in the `vite.config.js`:
 
 ```ts
-import comlink from 'vite-plugin-comlink'
+import { comlink } from 'vite-plugin-comlink'
 
 export default {
   plugins: [
@@ -38,7 +38,7 @@ As you don't want to wait for a new release for this plugin when a new version o
 
 ```ts
 // vite.config.js
-import comlink from 'vite-plugin-comlink'
+import { comlink } from 'vite-plugin-comlink'
 
 export default {
   plugins: [
