@@ -51,6 +51,10 @@ export default {
   }
 }
 ```
+
+### Plugin order
+Put this plugin as one of the first plugins. Only other plugins that create `ComlinkWorker` or `ComlinkSharedWorker` or transform files based on the existence of  `ComlinkWorker` or `ComlinkSharedWorker` should come before this plugin!
+
 ## Usage 
 ```ts
 // worker.js
