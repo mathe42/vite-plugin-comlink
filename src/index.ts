@@ -1,7 +1,6 @@
 import JSON5 from "json5";
 import MagicString from "magic-string";
 import { Plugin, normalizePath } from "vite";
-import { legacyWorker, legacySharedWorker } from "./legacy";
 
 const importMetaUrl = `${"import"}.meta.url`;
 const urlPrefix_normal = "internal:comlink:";
@@ -145,10 +144,7 @@ export function comlink({
           map: s.generateMap(),
         };
       },
-    },
-    // Will be removed in v4
-    legacyWorker,
-    legacySharedWorker,
+    }
   ];
 }
 
