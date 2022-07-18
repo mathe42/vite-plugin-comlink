@@ -12,23 +12,6 @@ export function comlink({
   replacement = "Worker",
   replacementShared = "SharedWorker",
 } = {}): Plugin[] {
-  {
-    // Legacy Argument check to be removed in 3.1
-    const arg = arguments[0];
-
-    if (arg && "customConfig" in arg) {
-      console.warn(
-        `[vite-plugin-comlink] The customConfig option is no longer supported. Please remove it.`
-      );
-    }
-
-    if (arg && "typeFile " in arg) {
-      console.warn(
-        `[vite-plugin-comlink] The typeFile option is no longer supported. Please remove it.`
-      );
-    }
-  }
-
   return [
     {
       configResolved(conf) {
