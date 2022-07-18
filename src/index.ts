@@ -59,7 +59,7 @@ export function comlink({
             import {expose} from 'comlink'
             import * as api from '${normalizePath(realID)}'
 
-            addEventListener('connect', (ev) => {
+            addEventListener('connect', (event) => {
                 const port = event.ports[0];
                   
                 expose(api, port);
