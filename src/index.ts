@@ -83,6 +83,7 @@ export function comlink({
               .trim(),
           );
 
+        // When we are in development we have to use module-workers.
         if (mode === "development") {
           options.type = "module";
         }
@@ -111,7 +112,7 @@ export function comlink({
           startOfThisCode + match.length,
           insertCode,
         );
-        
+
         return match;
       }
 

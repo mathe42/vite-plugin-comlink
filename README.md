@@ -5,8 +5,7 @@
 
 Use WebWorkers with comlink.
 
-This plugin removes the need to call `expose`, `wrap` from comlink and also you
-don't need to create the worker on your own.
+This plugin removes the need to call `expose`, `wrap` from comlink. This makes types and syntax a lot simpler as you basicly can "ignore" that you use comlink.
 
 ## Install
 
@@ -170,6 +169,7 @@ to the worker constructor options.
 - import syntax removed
 - remove default import import only as
   `import { comlink } from 'vite-plugin-comlink'`
+- renaming some internal import as names. Your workerfile should not have a value with name `__comlink_wrap` definded. (with v3 -> v4 this was changed from `wrap` -> `__comlink_wrap`)
 
 ## Resources
 
