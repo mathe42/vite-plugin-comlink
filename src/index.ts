@@ -42,16 +42,17 @@ export function comlink({
             import * as api from '${normalizePath(realID)}'
 
             addEventListener('connect', (event) => {
-                const port = event.ports[0];
-                  
-                expose(api, port);
-                // We might need this later...
-                // port.start()
+              const port = event.ports[0]; 
+                
+              expose(api, port);
+              // We might need this later...
+              // port.start()
             })
           `;
         }
       },
       transform(code: string, id: string) {
+        // Early exit
         if (
           !code.includes("ComlinkWorker") &&
           !code.includes("ComlinkSharedWorker")
@@ -61,7 +62,7 @@ export function comlink({
         const workerSearcher =
           /\bnew\s+(ComlinkWorker|ComlinkSharedWorker)\s*\(\s*new\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*\)\s*(.*)\)/g;
 
-        let s: MagicString = new MagicString(code);
+        let mStr: MagicString = new MagicString(code);
 
         function workerReplacer(
           match: string,
@@ -73,15 +74,15 @@ export function comlink({
 
           const index = code.indexOf(match);
 
-          const i = rest.indexOf(",");
+          const restKommaIndex = rest.indexOf(",");
 
-          let reClass =
+          let replacementClass =
             type === "ComlinkWorker" ? replacement : replacementShared;
 
-          if (i !== -1) {
+          if (restKommaIndex !== -1) {
             const opt = JSON5.parse(
               rest
-                .slice(i + 1)
+                .slice(restKommaIndex + 1)
                 .split(")")[0]
                 .trim()
             );
@@ -91,40 +92,40 @@ export function comlink({
             }
 
             if (opt.replacement) {
-              reClass = opt.replacement;
+              replacementClass = opt.replacement;
             }
 
-            rest = "," + JSON.stringify(opt) + ")";
+            rest = `,${JSON.stringify(opt)}`
           } else {
             if (mode === "development") {
-              rest += ', {type: "module"}';
+              rest += ',{type: "module"}';
             }
-            rest += ")";
           }
 
-          const insertCode = `wrap(
-            new ${reClass}(
+          const prefix = type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
+
+          const insertCode = `__comlink_wrap(
+            new ${replacementClass}(
               new URL(
-                '${
-                  type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
-                }${url}', 
+                '${prefix}${url}', 
                 ${importMetaUrl}
               )
               ${rest}
+            )
             ${type === "ComlinkSharedWorker" ? ".port" : ""}
           )`;
 
-          s.overwrite(index, index + match.length, insertCode);
+          mStr.overwrite(index, index + match.length, insertCode);
           return match;
         }
 
         code.replace(workerSearcher, workerReplacer);
 
-        s.appendLeft(0, `import {wrap} from 'comlink';\n`);
+        mStr.appendLeft(0, `import {wrap as __comlink_wrap} from 'comlink';\n`);
 
         return {
-          code: s.toString(),
-          map: s.generateMap(),
+          code: mStr.toString(),
+          map: mStr.generateMap(),
         };
       },
     }
