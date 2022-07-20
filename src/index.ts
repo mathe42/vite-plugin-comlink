@@ -129,5 +129,3 @@ export function comlink({
     },
   }
 }
-
-export default comlink;
