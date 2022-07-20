@@ -1,6 +1,6 @@
 import JSON5 from "json5";
 import MagicString from "magic-string";
-import { Plugin, normalizePath } from "vite";
+import { normalizePath, Plugin } from "vite";
 
 const importMetaUrl = `${"import"}.meta.url`;
 const urlPrefix_normal = "internal:comlink:";
@@ -9,7 +9,7 @@ const urlPrefix_shared = "internal:comlink-shared:";
 const workerWrap = (url: string) => `
 import {expose} from 'comlink';
 import * as api from '${url}';
-expose(api);`
+expose(api);`;
 
 const sharedWorkerWrap = (url: string) => `
 import {expose} from 'comlink';
@@ -21,7 +21,7 @@ addEventListener('connect', (event) => {
   expose(api, port);
   // We might need this later...
   // port.start();
-})`
+})`;
 
 export function comlink({
   replacement = "Worker",
@@ -39,16 +39,18 @@ export function comlink({
         return id;
       }
     },
-    async load(id) {
+    load(id) {
       if (id.includes(urlPrefix_normal)) {
-        return workerWrap(normalizePath(id.replace(urlPrefix_normal, "")))
+        return workerWrap(normalizePath(id.replace(urlPrefix_normal, "")));
       }
 
       if (id.includes(urlPrefix_shared)) {
-        return sharedWorkerWrap(normalizePath(id.replace(urlPrefix_shared, "")))
+        return sharedWorkerWrap(
+          normalizePath(id.replace(urlPrefix_shared, "")),
+        );
       }
     },
-    transform(code: string, id: string) {
+    transform(code: string) {
       // Early exit
       if (
         !code.includes("ComlinkWorker") &&
@@ -66,28 +68,32 @@ export function comlink({
         match: string,
         type: "ComlinkWorker" | "ComlinkSharedWorker",
         url: string,
-        rest: string
+        rest: string,
       ) {
         url = url.slice(1, url.length - 1);
 
         const startOfThisCode = code.indexOf(match);
         const restKommaIndex = rest.indexOf(",");
 
-        const options: WorkerOptions & { replacement?: string } = restKommaIndex === -1 ? {} : JSON5.parse(
-          rest
-            .slice(restKommaIndex + 1)
-            .split(")")[0]
-            .trim()
-        );
+        const options: WorkerOptions & { replacement?: string } =
+          restKommaIndex === -1 ? {} : JSON5.parse(
+            rest
+              .slice(restKommaIndex + 1)
+              .split(")")[0]
+              .trim(),
+          );
 
         if (mode === "development") {
           options.type = "module";
         }
 
-        const replacementClass =
-          options.replacement ? options.replacement : (type === "ComlinkWorker" ? replacement : replacementShared)
+        const replacementClass = options.replacement
+          ? options.replacement
+          : (type === "ComlinkWorker" ? replacement : replacementShared);
 
-        const prefix = type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
+        const prefix = type === "ComlinkWorker"
+          ? urlPrefix_normal
+          : urlPrefix_shared;
 
         const insertCode = `__comlink_wrap(
           new ${replacementClass}(
@@ -100,7 +106,12 @@ export function comlink({
           ${type === "ComlinkSharedWorker" ? ".port" : ""}
         )`;
 
-        mStr.overwrite(startOfThisCode, startOfThisCode + match.length, insertCode);
+        mStr.overwrite(
+          startOfThisCode,
+          startOfThisCode + match.length,
+          insertCode,
+        );
+        
         return match;
       }
 
@@ -113,5 +124,5 @@ export function comlink({
         map: mStr.generateMap(),
       };
     },
-  }
+  };
 }
