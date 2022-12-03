@@ -100,16 +100,16 @@ export const comlink = () =>
         }
 
         const insertCode = `wrap(
-        new ${replacementClass}(
-          new URL(
-            '${
-          type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
-        }${url}', 
-            ${importMetaUrl}
-          )
-          ${optsJSON}
-        )${type === "ComlinkSharedWorker" ? ".port" : ""}
-      )`;
+          new ${replacementClass}(
+            new URL(
+              '${
+            type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
+          }${url}', 
+              ${importMetaUrl}
+            )
+            ${optsJSON}
+          )${type === "ComlinkSharedWorker" ? ".port" : ""}
+        )`;
 
         magicString.overwrite(
           posOfMatch,
