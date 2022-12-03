@@ -1,7 +1,6 @@
 import JSON5 from "json5";
 import MagicString from "magic-string";
 import { Plugin, normalizePath } from "vite";
-import { legacyWorker, legacySharedWorker } from "./legacy";
 
 const importMetaUrl = `${"import"}.meta.url`;
 const urlPrefix_normal = "internal:comlink:";
@@ -9,147 +8,118 @@ const urlPrefix_shared = "internal:comlink-shared:";
 
 let mode = "";
 
-export function comlink({
-  replacement = "Worker",
-  replacementShared = "SharedWorker",
-} = {}): Plugin[] {
-  {
-    // Legacy Argument check to be removed in 3.1
-    const arg = arguments[0];
+export const comlink = () => ({
+  name: "comlink",
+  configResolved(conf) {
+    mode = conf.mode;
+  },
+  resolveId(id) {
+    if (id.includes(urlPrefix_normal) || id.includes(urlPrefix_shared)) {
+      return id;
+    }
+  },
+  async load(id) {
+    if (id.includes(urlPrefix_normal)) {
+      const realID = normalizePath(id.replace(urlPrefix_normal, ""));
 
-    if (arg && "customConfig" in arg) {
-      console.warn(
-        `[vite-plugin-comlink] The customConfig option is no longer supported. Please remove it.`
-      );
+      return `
+        import { expose } from 'comlink'
+        import * as api from '${realID}'
+
+        expose(api)`;
     }
 
-    if (arg && "typeFile " in arg) {
-      console.warn(
-        `[vite-plugin-comlink] The typeFile option is no longer supported. Please remove it.`
-      );
+    if (id.includes(urlPrefix_shared)) {
+      const realID = normalizePath(id.replace(urlPrefix_shared, ""));
+
+      return `
+        import { expose } from 'comlink'
+        import * as api from '${realID}'
+
+        addEventListener('connect', (event) => {
+          const port = event.ports[0];
+            
+          expose(api, port);
+          // We might need this later...
+          // port.start()
+        })`;
     }
-  }
+  },
+  transform(code: string) {
+    if (
+      !code.includes("ComlinkWorker") &&
+      !code.includes("ComlinkSharedWorker")
+    ) {
+      return;
+    }
 
-  return [
-    {
-      configResolved(conf) {
-        mode = conf.mode;
-      },
-      name: "comlink",
-      resolveId(id) {
-        if (id.includes(urlPrefix_normal) || id.includes(urlPrefix_shared))
-          return id;
-      },
-      async load(id) {
-        if (id.includes(urlPrefix_normal)) {
-          const realID = normalizePath(id.replace(urlPrefix_normal, ""));
+    const workerSearcherRegex =
+      /\bnew\s+(ComlinkWorker|ComlinkSharedWorker)\s*\(\s*new\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*\)\s*([^\)]*)\)/g;
 
-          return `
-            import {expose} from 'comlink'
-            import * as api from '${normalizePath(realID)}'
+    const magicString: MagicString = new MagicString(code);
 
-            expose(api)
-          `;
+    function workerReplacer(
+      match: string,
+      type: "ComlinkWorker" | "ComlinkSharedWorker",
+      url: string,
+      rest: string
+    ) {
+      url = url.slice(1, url.length - 1);
+
+      const posOfMatch = code.indexOf(match);
+      const positionOfOptions = rest.indexOf(",") + 1;
+
+      let replacementClass =
+        type === "ComlinkWorker" ? "Worker" : "SharedWorker";
+
+      let optsJSON = ''
+
+      if (positionOfOptions !== -1) {
+        const optsParsed = JSON5.parse(
+          rest
+            .slice(positionOfOptions)
+            .split(")")[0]
+            .trim()
+        );
+
+        if (mode === "development") {
+          optsParsed.type = "module";
         }
 
-        if (id.includes(urlPrefix_shared)) {
-          const realID = normalizePath(id.replace(urlPrefix_normal, ""));
-
-          return `
-            import {expose} from 'comlink'
-            import * as api from '${normalizePath(realID)}'
-
-            addEventListener('connect', (event) => {
-                const port = event.ports[0];
-                  
-                expose(api, port);
-                // We might need this later...
-                // port.start()
-            })
-          `;
-        }
-      },
-      transform(code: string, id: string) {
-        if (
-          !code.includes("ComlinkWorker") &&
-          !code.includes("ComlinkSharedWorker")
-        )
-          return;
-
-        const workerSearcher =
-          /\bnew\s+(ComlinkWorker|ComlinkSharedWorker)\s*\(\s*new\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*\)\s*([^\)]*)\)/g;
-
-        let s: MagicString = new MagicString(code);
-
-        function workerReplacer(
-          match: string,
-          type: "ComlinkWorker" | "ComlinkSharedWorker",
-          url: string,
-          rest: string
-        ) {
-          url = url.slice(1, url.length - 1);
-
-          const index = code.indexOf(match);
-
-          const i = rest.indexOf(",");
-
-          let reClass =
-            type === "ComlinkWorker" ? replacement : replacementShared;
-
-          if (i !== -1) {
-            const opt = JSON5.parse(
-              rest
-                .slice(i + 1)
-                .split(")")[0]
-                .trim()
-            );
-
-            if (mode === "development") {
-              opt.type = "module";
-            }
-
-            if (opt.replacement) {
-              reClass = opt.replacement;
-            }
-
-            rest = "," + JSON.stringify(opt) + ")";
-          } else {
-            if (mode === "development") {
-              rest += ', {type: "module"}';
-            }
-            rest += ")";
-          }
-
-          const insertCode = `wrap(
-            new ${reClass}(
-              new URL(
-                '${
-                  type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
-                }${url}', 
-                ${importMetaUrl}
-              )
-              ${rest}
-            ${type === "ComlinkSharedWorker" ? ".port" : ""}
-          )`;
-
-          s.overwrite(index, index + match.length, insertCode);
-          return match;
+        if (optsParsed.replacement) {
+          replacementClass = optsParsed.replacement;
         }
 
-        code.replace(workerSearcher, workerReplacer);
+        optsJSON = "," + JSON.stringify(optsParsed);
+      } else {
+        if (mode === "development") {
+          optsJSON = ', { type: "module" }';
+        }
+      }
 
-        s.appendLeft(0, `import {wrap} from 'comlink';\n`);
+      const insertCode = `wrap(
+        new ${replacementClass}(
+          new URL(
+            '${type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared}${url}', 
+            ${importMetaUrl}
+          )
+          ${optsJSON}
+        )${type === "ComlinkSharedWorker" ? ".port" : ""}
+      )`;
 
-        return {
-          code: s.toString(),
-          map: s.generateMap(),
-        };
-      },
-    },
-    // Will be removed in v4
-    legacyWorker,
-    legacySharedWorker,
-  ];
-}
+      magicString.overwrite(posOfMatch, posOfMatch + match.length, insertCode);
+      return match;
+    }
+
+    code.replace(workerSearcherRegex, workerReplacer);
+
+    magicString.appendLeft(0, `import {wrap} from 'comlink';\n`);
+
+    return {
+      code: magicString.toString(),
+      map: magicString.generateMap(),
+    };
+  },
+}) as Plugin
 
 export default comlink;
