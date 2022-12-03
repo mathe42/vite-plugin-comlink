@@ -165,12 +165,12 @@ to the worker constructor options.
   be added!
 - you have to add comlink to `worker.plugins` array.
 
-### v3 to v4 (not yet released)
-
-- the import syntax will be removed you have to switch to the new syntax!
-- Release in end of May or June.
+### v3 to v4
+- the import syntax was removed
+- warning messages removed for options
+- global replacement option removed
 
 ## Resources
 
-https://github.com/GoogleChromeLabs/comlink\
+https://github.com/GoogleChromeLabs/comlink
 https://github.com/surma/rollup-plugin-comlink
