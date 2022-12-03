@@ -7,7 +7,7 @@ specifiers:
   magic-string: 0.26.2
   tsup: 5.12.9
   typescript: 4.7.4
-  vite: 2.9.14
+  vite: 2.9.15
 
 dependencies:
   json5: 2.2.1
@@ -18,7 +18,7 @@ devDependencies:
   comlink: 4.3.1
   tsup: 5.12.9_typescript@4.7.4
   typescript: 4.7.4
-  vite: 2.9.14
+  vite: 2.9.15
 
 packages:
 
@@ -728,14 +728,6 @@ packages:
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
     dev: true
 
-  /rollup/2.70.2:
-    resolution: {integrity: sha512-EitogNZnfku65I1DD5Mxe8JYRUCy0hkK5X84IlDtUs+O6JRMpRciXTzyCUuX11b5L5pvjH+OmFXiQ3XjabcXgg==}
-    engines: {node: '>=10.0.0'}
-    hasBin: true
-    optionalDependencies:
-      fsevents: 2.3.2
-    dev: true
-
   /rollup/2.76.0:
     resolution: {integrity: sha512-9jwRIEY1jOzKLj3nsY/yot41r19ITdQrhs+q3ggNWhr9TQgduHqANvPpS32RNpzGklJu3G1AJfvlZLi/6wFgWA==}
     engines: {node: '>=10.0.0'}
@@ -886,8 +878,8 @@ packages:
     hasBin: true
     dev: true
 
-  /vite/2.9.14:
-    resolution: {integrity: sha512-P/UCjSpSMcE54r4mPak55hWAZPlyfS369svib/gpmz8/01L822lMPOJ/RYW6tLCe1RPvMvOsJ17erf55bKp4Hw==}
+  /vite/2.9.15:
+    resolution: {integrity: sha512-fzMt2jK4vQ3yK56te3Kqpkaeq9DkcZfBbzHwYpobasvgYmP2SoAr6Aic05CsB4CzCZbsDv4sujX3pkEGhLabVQ==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
@@ -905,7 +897,7 @@ packages:
       esbuild: 0.14.36
       postcss: 8.4.13
       resolve: 1.22.0
-      rollup: 2.70.2
+      rollup: 2.76.0
     optionalDependencies:
       fsevents: 2.3.2
     dev: true
