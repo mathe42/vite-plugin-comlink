@@ -112,7 +112,6 @@ export const comlink = () => ({
     }
 
     code.replace(workerSearcherRegex, workerReplacer);
-
     magicString.appendLeft(0, `import {wrap} from 'comlink';\n`);
 
     return {
