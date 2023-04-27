@@ -53,7 +53,7 @@ export function comlink({
         }
 
         if (id.includes(urlPrefix_shared)) {
-          const realID = normalizePath(id.replace(urlPrefix_normal, ""));
+          const realID = normalizePath(id.replace(urlPrefix_shared, ""));
 
           return `
             import {expose} from 'comlink'
