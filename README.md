@@ -34,24 +34,6 @@ export default {
 ### Comlink install
 As you don't want to wait for a new release for this plugin when a new version of comlink is released, this plugin has comlink as a peer dependency so you can install the version of comlink that you need.
 
-### Add it to vite.config.js
-
-```ts
-// vite.config.js
-import { comlink } from 'vite-plugin-comlink'
-
-export default {
-  plugins: [
-    comlink()
-  ],
-  worker: {
-    plugins: [
-      comlink()
-    ]
-  }
-}
-```
-
 ### Plugin order
 Put this plugin as one of the first plugins. Only other plugins that create `ComlinkWorker` or `ComlinkSharedWorker` or transform files based on the existence of  `ComlinkWorker` or `ComlinkSharedWorker` should come before this plugin!
 
