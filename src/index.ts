@@ -1,7 +1,7 @@
 import JSON5 from "json5";
 import MagicString from "magic-string";
 import { Plugin, normalizePath } from "vite";
-import { legacyWorker, legacySharedWorker } from "./legacy";
+import { SourceMapConsumer, SourceMapGenerator } from "source-map";
 
 const importMetaUrl = `${"import"}.meta.url`;
 const urlPrefix_normal = "internal:comlink:";
@@ -13,23 +13,6 @@ export function comlink({
   replacement = "Worker",
   replacementShared = "SharedWorker",
 } = {}): Plugin[] {
-  {
-    // Legacy Argument check to be removed in 3.1
-    const arg = arguments[0];
-
-    if (arg && "customConfig" in arg) {
-      console.warn(
-        `[vite-plugin-comlink] The customConfig option is no longer supported. Please remove it.`
-      );
-    }
-
-    if (arg && "typeFile " in arg) {
-      console.warn(
-        `[vite-plugin-comlink] The typeFile option is no longer supported. Please remove it.`
-      );
-    }
-  }
-
   return [
     {
       configResolved(conf) {
@@ -69,7 +52,7 @@ export function comlink({
           `;
         }
       },
-      transform(code: string, id: string) {
+      async transform(code: string, id: string) {
         if (
           !code.includes("ComlinkWorker") &&
           !code.includes("ComlinkSharedWorker")
@@ -140,15 +123,18 @@ export function comlink({
 
         s.appendLeft(0, `import {wrap} from 'comlink';\n`);
 
+        const prevSourcemapConsumer = await new SourceMapConsumer(this.getCombinedSourcemap());
+        const thisSourcemapConsumer = await new SourceMapConsumer(s.generateMap());
+
+        const sourceMapGen = SourceMapGenerator.fromSourceMap(thisSourcemapConsumer);
+        sourceMapGen.applySourceMap(prevSourcemapConsumer);
+
         return {
           code: s.toString(),
-          map: s.generateMap(),
+          map: sourceMapGen.toJSON(),
         };
       },
-    },
-    // Will be removed in v4
-    legacyWorker,
-    legacySharedWorker,
+    } as Plugin
   ];
 }
 

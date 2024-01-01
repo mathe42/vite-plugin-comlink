@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-comlink",
-  "version": "3.0.5",
+  "version": "4.0.0",
   "description": "Comlink for Vite",
   "repository": {
     "type": "git",
@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "json5": "2.2.3",
-    "magic-string": "0.27.0"
+    "magic-string": "0.27.0",
+    "source-map": "^0.7.4"
   },
   "devDependencies": {
     "@types/node": "18.11.18",
@@ -29,5 +30,8 @@
   "peerDependencies": {
     "comlink": "^4.3.1",
     "vite": ">=2.9.6"
+  },
+  "volta": {
+    "node": "14.21.3"
   }
 }

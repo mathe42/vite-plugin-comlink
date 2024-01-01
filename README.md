@@ -13,24 +13,6 @@ npm i --save-dev vite-plugin-comlink # yarn add -D vite-plugin-comlink
 npm i --save comlink # yarn add comlink
 ```
 
-### vite-plugin-worker
-Quick setup (with comlink included) would be in the `vite.config.js`:
-
-```ts
-import { comlink } from 'vite-plugin-comlink'
-
-export default {
-  plugins: [
-    comlink()
-  ],
-  worker: {
-    plugins: [
-      comlink()
-    ]
-  }
-}
-```
-
 ### Comlink install
 As you don't want to wait for a new release for this plugin when a new version of comlink is released, this plugin has comlink as a peer dependency so you can install the version of comlink that you need.
 
@@ -129,9 +111,11 @@ If you want a worker to be a module worker in production, add `type: 'module'` t
 * remove of typefile. For typescript support please write your own type file or switch to the new syntax.
 * remove of ServiceWorker support. This was considered unstable an it was hacky so it got removed. If vite adds support for building ServiceWorker this will be added!
 * you have to add comlink to `worker.plugins` array.
-### v3 to v4 (not yet released)
+### v3 to v4
 * the import syntax will be removed you have to switch to the new syntax!
-* Release in end of May or June.
+* Removal of Warnings of leagacy (v2) options
+* ESM support
+* Better Source Maps
 
 ## Resources
 https://github.com/GoogleChromeLabs/comlink  
