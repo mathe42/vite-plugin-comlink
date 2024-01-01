@@ -14,5 +14,5 @@ jobs:
     - uses: actions/checkout@v3
     - name: setup node and pnpm
       uses: dafnik/setup-node-pnpm@v1
-    - run: pnpm ci
+    - run: pnpm i
     - run: pnpm run build
