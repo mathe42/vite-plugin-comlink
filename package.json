@@ -14,6 +14,9 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./client": {
+      "types": "./client.d.ts"
     }
   },
   "author": "Sebastian Krüger (@mathe42)",
