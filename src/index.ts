@@ -127,7 +127,7 @@ export function comlink({
         const thisSourcemapConsumer = await new SourceMapConsumer(s.generateMap());
 
         const sourceMapGen = SourceMapGenerator.fromSourceMap(thisSourcemapConsumer);
-        sourceMapGen.applySourceMap(prevSourcemapConsumer);
+        sourceMapGen.applySourceMap(prevSourcemapConsumer, id);
 
         return {
           code: s.toString(),
