@@ -6,6 +6,23 @@ Use WebWorkers with comlink.
 
 This plugin removes the need to call `expose`, `wrap` from comlink and also you don't need to create the worker on your own.
 
+## Upgrade Vite 4 to Vite 5
+
+Make sure that you change the worker plugin config to a function for example like this
+
+```ts
+// vite.config.js
+export default {
+  worker: {
+    plugins: () => ([
+      comlink()
+    ])
+  }
+}
+```
+
+see https://github.com/vitejs/vite/pull/14685 for details.
+
 ## Install
 
 ```sh
@@ -27,9 +44,9 @@ export default {
     comlink()
   ],
   worker: {
-    plugins: [
+    plugins: () => ([
       comlink()
-    ]
+    ])
   }
 }
 ```
