@@ -103,17 +103,22 @@ export function comlink({
             rest += ")";
           }
 
-          const insertCode = `wrap(
-            new ${reClass}(
-              new URL(
-                '${
-                  type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
-                }${url}', 
-                ${importMetaUrl}
-              )
-              ${rest}
-            ${type === "ComlinkSharedWorker" ? ".port" : ""}
-          )`;
+          const insertCode = `((function(){
+            const endpoint = 
+              new ${reClass}(
+                new URL(
+                  '${
+                    type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
+                  }${url}', 
+                  ${importMetaUrl}
+                )
+                ${rest}
+              ${type === "ComlinkSharedWorker" ? ".port" : ""}
+            
+            const wrapped = wrap(endpoint);
+            wrapped.endpoint = endpoint;
+            return wrapped;
+          })())`;
 
           s.overwrite(index, index + match.length, insertCode);
           return match;
