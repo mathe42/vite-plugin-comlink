@@ -126,10 +126,6 @@ export function comlink({
           return match;
         }
 
-          s.overwrite(index, index + match.length, insertCode);
-          return match;
-        }
-
         code.replace(workerSearcher, workerReplacer);
 
         s.appendLeft(0, `import {wrap} from 'comlink';\n`);
