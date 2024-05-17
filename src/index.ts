@@ -103,22 +103,28 @@ export function comlink({
             rest += ")";
           }
 
-          const insertCode = `((function(){
-            const endpoint = 
-              new ${reClass}(
-                new URL(
-                  '${
-                    type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
-                  }${url}', 
-                  ${importMetaUrl}
-                )
-                ${rest}
-              ${type === "ComlinkSharedWorker" ? ".port" : ""}
-            
+          const insertCode = `((function() {
+            const endpoint = new ${reClass}(
+              new URL(
+                '${
+                  type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
+                }${url}', 
+                ${importMetaUrl}
+              )
+              ${rest}
+            ${type === "ComlinkSharedWorker" ? ".port" : ""};
             const wrapped = wrap(endpoint);
-            wrapped.endpoint = endpoint;
-            return wrapped;
+            return new Proxy(wrapped, {
+              get(target, prop, receiver) {
+                if (prop === Symbol.for('endpoint')) return endpoint;
+                return Reflect.get(...arguments);
+              }
+            });
           })())`;
+
+          s.overwrite(index, index + match.length, insertCode);
+          return match;
+        }
 
           s.overwrite(index, index + match.length, insertCode);
           return match;
