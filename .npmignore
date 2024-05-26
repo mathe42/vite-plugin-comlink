@@ -1,1 +1,4 @@
 src
+.github
+renovate.json
+tsconfig.json
