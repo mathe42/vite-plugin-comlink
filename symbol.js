@@ -1,4 +1,11 @@
 import { wrap as comlink_wrap } from "comlink";
+export {
+    proxy,
+    proxyMarker,
+    finalizer,
+    releaseProxy,
+    createEndpoint
+} from 'comlink'
 export const endpointSymbol = Symbol("getEndpoint");
 
 /**

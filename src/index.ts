@@ -70,8 +70,6 @@ export function comlink(): Plugin[] {
         const matches = code.matchAll(workerSearcher);
 
         for (const match of matches) {
-          console.log(match)
-
           const index = match.index;
           const matchCode = match[0];
           const c1_new = match[1];
@@ -115,7 +113,7 @@ export function comlink(): Plugin[] {
           s.overwrite(index, index + matchCode.length, insertCode);
         }
 
-        s.appendLeft(0, `import {endpointSymbol as ___endpointSymbol, wrap as ___wrap} from 'vite-plugin-comlink/symbol';\n`);
+        s.appendLeft(0, `import {wrap as ___wrap} from 'vite-plugin-comlink/symbol';\n`);
 
         const prevSourcemapConsumer = await new SourceMapConsumer(this.getCombinedSourcemap());
         const thisSourcemapConsumer = await new SourceMapConsumer(s.generateMap());
