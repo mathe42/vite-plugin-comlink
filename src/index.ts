@@ -116,7 +116,7 @@ export function comlink({
             const wrapped = wrap(endpoint);
             return new Proxy(wrapped, {
               get(target, prop, receiver) {
-                if (prop === Symbol.for('endpoint')) return endpoint;
+                if (prop === ___endpointSymbol) return endpoint;
                 return Reflect.get(...arguments);
               }
             });
@@ -128,7 +128,7 @@ export function comlink({
 
         code.replace(workerSearcher, workerReplacer);
 
-        s.appendLeft(0, `import {wrap} from 'comlink';\n`);
+        s.appendLeft(0, `import {wrap} from 'comlink';import {endpointSymbol as ___endpointSymbol} from 'vite-plugin-comlink/symbol';\n`);
 
         const prevSourcemapConsumer = await new SourceMapConsumer(this.getCombinedSourcemap());
         const thisSourcemapConsumer = await new SourceMapConsumer(s.generateMap());

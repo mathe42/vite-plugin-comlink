@@ -17,6 +17,10 @@
     },
     "./client": {
       "types": "./client.d.ts"
+    },
+    "./symbol": {
+      "types": "./symbol.d.ts",
+      "import": "./symbol.js"
     }
   },
   "author": "Sebastian Krüger (@mathe42)",
