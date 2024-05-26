@@ -31,21 +31,21 @@
   },
   "dependencies": {
     "json5": "2.2.3",
-    "magic-string": "0.30.5",
+    "magic-string": "0.30.10",
     "source-map": "^0.7.4"
   },
   "devDependencies": {
-    "@types/node": "20.10.6",
+    "@types/node": "20.12.12",
     "comlink": "4.4.1",
-    "tsup": "8.0.1",
-    "typescript": "5.3.3",
-    "vite": "5.0.10"
+    "tsup": "8.0.2",
+    "typescript": "5.4.5",
+    "vite": "5.2.11"
   },
   "peerDependencies": {
     "comlink": "^4.3.1",
     "vite": ">=2.9.6"
   },
   "volta": {
-    "node": "20.10.0"
+    "node": "20.13.1"
   }
 }
