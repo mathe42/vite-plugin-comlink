@@ -1,4 +1,5 @@
 src
+example
 .github
 renovate.json
 tsconfig.json

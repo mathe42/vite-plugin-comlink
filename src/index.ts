@@ -103,8 +103,8 @@ export function comlink({
             rest += ")";
           }
 
-          const insertCode = `wrap(
-            new ${reClass}(
+          const insertCode = `((function() {
+            const endpoint = new ${reClass}(
               new URL(
                 '${
                   type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
@@ -112,8 +112,15 @@ export function comlink({
                 ${importMetaUrl}
               )
               ${rest}
-            ${type === "ComlinkSharedWorker" ? ".port" : ""}
-          )`;
+            ${type === "ComlinkSharedWorker" ? ".port" : ""};
+            const wrapped = wrap(endpoint);
+            return new Proxy(wrapped, {
+              get(target, prop, receiver) {
+                if (prop === ___endpointSymbol) return endpoint;
+                return Reflect.get(...arguments);
+              }
+            });
+          })())`;
 
           s.overwrite(index, index + match.length, insertCode);
           return match;
@@ -121,7 +128,7 @@ export function comlink({
 
         code.replace(workerSearcher, workerReplacer);
 
-        s.appendLeft(0, `import {wrap} from 'comlink';\n`);
+        s.appendLeft(0, `import {wrap} from 'comlink';import {endpointSymbol as ___endpointSymbol} from 'vite-plugin-comlink/symbol';\n`);
 
         const prevSourcemapConsumer = await new SourceMapConsumer(this.getCombinedSourcemap());
         const thisSourcemapConsumer = await new SourceMapConsumer(s.generateMap());

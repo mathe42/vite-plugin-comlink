@@ -102,7 +102,15 @@ const result = await instance.add(2, 3)
 
 result === 5
 ```
+### Get Worker Instance
+You can get to the worker instance like this:
 
+```ts
+import { endpointSymbol } from 'vite-plugin-comlink/symbol'
+
+const api = new ComlinkWorker<typeof import('./worker')>(new URL('./worker', import.meta.url), {/* normal Worker options*/})
+const worker = api[endpointSymbol];
+```
 
 ## Module Worker
 Not all Browsers support module Workers (see https://caniuse.com/mdn-api_worker_worker_ecmascript_modules).
