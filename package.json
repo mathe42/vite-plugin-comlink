@@ -4,7 +4,7 @@
   "description": "Comlink for Vite",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mathe42/vite-plugin-comlink"
+    "url": "git+https://github.com/mathe42/vite-plugin-comlink.git"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
