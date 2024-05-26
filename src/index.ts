@@ -70,7 +70,7 @@ export function comlink(): Plugin[] {
         const matches = code.matchAll(workerSearcher);
 
         for (const match of matches) {
-          const index = match.index;
+          const index = match.index!;
           const matchCode = match[0];
           const c1_new = match[1];
           const c2_type = match[2];
