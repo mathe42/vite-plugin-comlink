@@ -1,25 +1,16 @@
 import { defineConfig } from "vite";
 import comlink from "../src/index";
 import { join, dirname } from "node:path";
-
-const map = {
-  name: 'map',
-  resolveId(source, importer, options) {
-      if(importer == "vite-plugin-comlink") {
-        return join(dirname(import.meta.url), '..')
-      }
-  },
-}
+import inspect from "vite-plugin-inspect";
 
 export default defineConfig({
   plugins: [
     comlink(),
-    map
+    inspect()
   ],
   worker: {
     plugins: () => ([
-        comlink(),
-        map
+        comlink()
     ])
   }
 });
