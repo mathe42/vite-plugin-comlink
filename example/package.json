@@ -10,8 +10,7 @@
   },
   "devDependencies": {
     "typescript": "^5.2.2",
-    "vite": "^5.2.0",
-    "vite-plugin-comlink": "../"
+    "vite": "^5.2.0"
   },
   "dependencies": {
     "comlink": "^4.4.1"

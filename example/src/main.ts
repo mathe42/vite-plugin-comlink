@@ -5,3 +5,6 @@ const x = w[endpointSymbol]
 
 console.log(x)
 console.log(await w.add(5,3))
+
+const w2 = new ComlinkWorker<typeof import('./worker2-1')>(new URL("./worker2-1.ts", import.meta.url))
+console.log(await w2.add(6,3))
