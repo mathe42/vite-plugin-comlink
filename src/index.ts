@@ -80,45 +80,56 @@ export function comlink(): Plugin[] {
           const c6_koma = match[6];
           const c7_options = match[7];
           const c8_end = match[8];
-          
+
           const opt = c7_options ? JSON5.parse(c7_options) : {};
 
           const urlQuote = c4_path[0];
 
-          console.log(c4_path)
+          console.log(c4_path);
           c4_path = c4_path.substring(1, c4_path.length - 1);
-          
+
           if (mode === "development") {
             opt.type = "module";
           }
           const options = JSON.stringify(opt);
 
-          const prefix = c2_type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared;
-          const className = c2_type == 'ComlinkWorker' ? 'Worker' : 'SharedWorker';
+          const prefix =
+            c2_type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared;
+          const className =
+            c2_type == "ComlinkWorker" ? "Worker" : "SharedWorker";
 
           const res = await this.resolve(c4_path, id, {});
           let path = c4_path;
 
-          if(res) {
+          if (res) {
             path = res.id;
-            if(path.startsWith(root)) {
+            if (path.startsWith(root)) {
               path = path.substring(root.length);
             }
-          }          
+          }
           const worker_constructor = `${c1_new}${className}${c3_new_url}${urlQuote}${prefix}${path}${urlQuote}${c5_import_meta},${options}${c8_end}`;
 
           const insertCode = `___wrap(${worker_constructor});\n`;
-          
-          console.log(insertCode)
+
+          console.log(insertCode);
           s.overwrite(index, index + matchCode.length, insertCode);
         }
 
-        s.appendLeft(0, `import {wrap as ___wrap} from 'vite-plugin-comlink/symbol';\n`);
+        s.appendLeft(
+          0,
+          `import {wrap as ___wrap} from 'vite-plugin-comlink/symbol';\n`
+        );
 
-        const prevSourcemapConsumer = await new SourceMapConsumer(this.getCombinedSourcemap());
-        const thisSourcemapConsumer = await new SourceMapConsumer(s.generateMap());
+        const prevSourcemapConsumer = await new SourceMapConsumer(
+          this.getCombinedSourcemap()
+        );
+        const thisSourcemapConsumer = await new SourceMapConsumer(
+          s.generateMap()
+        );
 
-        const sourceMapGen = SourceMapGenerator.fromSourceMap(thisSourcemapConsumer);
+        const sourceMapGen = SourceMapGenerator.fromSourceMap(
+          thisSourcemapConsumer
+        );
         sourceMapGen.applySourceMap(prevSourcemapConsumer, id);
 
         return {
@@ -126,7 +137,7 @@ export function comlink(): Plugin[] {
           map: sourceMapGen.toJSON(),
         };
       },
-    } as Plugin
+    } as Plugin,
   ];
 }
 
