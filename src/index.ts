@@ -85,7 +85,6 @@ export function comlink(): Plugin[] {
 
           const urlQuote = c4_path[0];
 
-          console.log(c4_path);
           c4_path = c4_path.substring(1, c4_path.length - 1);
 
           if (mode === "development") {
@@ -111,7 +110,6 @@ export function comlink(): Plugin[] {
 
           const insertCode = `___wrap(${worker_constructor});\n`;
 
-          console.log(insertCode);
           s.overwrite(index, index + matchCode.length, insertCode);
         }
 
