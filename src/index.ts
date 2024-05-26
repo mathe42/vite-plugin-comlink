@@ -8,20 +8,23 @@ const urlPrefix_normal = "internal:comlink:";
 const urlPrefix_shared = "internal:comlink-shared:";
 
 let mode = "";
+let root = "";
 
-export function comlink({
-  replacement = "Worker",
-  replacementShared = "SharedWorker",
-} = {}): Plugin[] {
+export function comlink(): Plugin[] {
   return [
     {
       configResolved(conf) {
         mode = conf.mode;
+        root = conf.root;
       },
       name: "comlink",
       resolveId(id) {
-        if (id.includes(urlPrefix_normal) || id.includes(urlPrefix_shared))
-          return id;
+        if (id.includes(urlPrefix_normal)) {
+          return urlPrefix_normal + id.split(urlPrefix_normal)[1];
+        }
+        if (id.includes(urlPrefix_shared)) {
+          return urlPrefix_shared + id.split(urlPrefix_shared)[1];
+        }
       },
       async load(id) {
         if (id.includes(urlPrefix_normal)) {
@@ -60,80 +63,73 @@ export function comlink({
           return;
 
         const workerSearcher =
-          /\bnew\s+(ComlinkWorker|ComlinkSharedWorker)\s*\(\s*new\s+URL\s*\(\s*('[^']+'|"[^"]+"|`[^`]+`)\s*,\s*import\.meta\.url\s*\)\s*([^\)]*)\)/g;
+          /(\bnew\s+)(ComlinkWorker|ComlinkSharedWorker)(\s*\(\s*new\s+URL\s*\(\s*)('[^']+'|"[^"]+"|`[^`]+`)(\s*,\s*import\.meta\.url\s*\)\s*)(,?)([^\)]*)(\))/g;
 
         let s: MagicString = new MagicString(code);
 
-        function workerReplacer(
-          match: string,
-          type: "ComlinkWorker" | "ComlinkSharedWorker",
-          url: string,
-          rest: string
-        ) {
-          url = url.slice(1, url.length - 1);
+        const matches = code.matchAll(workerSearcher);
 
-          const index = code.indexOf(match);
+        for (const match of matches) {
+          const index = match.index;
+          const matchCode = match[0];
+          const c1_new = match[1];
+          const c2_type = match[2];
+          const c3_new_url = match[3];
+          let c4_path = match[4];
+          const c5_import_meta = match[5];
+          const c6_koma = match[6];
+          const c7_options = match[7];
+          const c8_end = match[8];
 
-          const i = rest.indexOf(",");
+          const opt = c7_options ? JSON5.parse(c7_options) : {};
 
-          let reClass =
-            type === "ComlinkWorker" ? replacement : replacementShared;
+          const urlQuote = c4_path[0];
 
-          if (i !== -1) {
-            const opt = JSON5.parse(
-              rest
-                .slice(i + 1)
-                .split(")")[0]
-                .trim()
-            );
+          console.log(c4_path);
+          c4_path = c4_path.substring(1, c4_path.length - 1);
 
-            if (mode === "development") {
-              opt.type = "module";
-            }
-
-            if (opt.replacement) {
-              reClass = opt.replacement;
-            }
-
-            rest = "," + JSON.stringify(opt) + ")";
-          } else {
-            if (mode === "development") {
-              rest += ', {type: "module"}';
-            }
-            rest += ")";
+          if (mode === "development") {
+            opt.type = "module";
           }
+          const options = JSON.stringify(opt);
 
-          const insertCode = `((function() {
-            const endpoint = new ${reClass}(
-              new URL(
-                '${
-                  type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared
-                }${url}', 
-                ${importMetaUrl}
-              )
-              ${rest}
-            ${type === "ComlinkSharedWorker" ? ".port" : ""};
-            const wrapped = wrap(endpoint);
-            return new Proxy(wrapped, {
-              get(target, prop, receiver) {
-                if (prop === ___endpointSymbol) return endpoint;
-                return Reflect.get(...arguments);
-              }
-            });
-          })())`;
+          const prefix =
+            c2_type === "ComlinkWorker" ? urlPrefix_normal : urlPrefix_shared;
+          const className =
+            c2_type == "ComlinkWorker" ? "Worker" : "SharedWorker";
 
-          s.overwrite(index, index + match.length, insertCode);
-          return match;
+          const res = await this.resolve(c4_path, id, {});
+          let path = c4_path;
+
+          if (res) {
+            path = res.id;
+            if (path.startsWith(root)) {
+              path = path.substring(root.length);
+            }
+          }
+          const worker_constructor = `${c1_new}${className}${c3_new_url}${urlQuote}${prefix}${path}${urlQuote}${c5_import_meta},${options}${c8_end}`;
+
+          const insertCode = `___wrap(${worker_constructor});\n`;
+
+          console.log(insertCode);
+          s.overwrite(index, index + matchCode.length, insertCode);
         }
 
-        code.replace(workerSearcher, workerReplacer);
+        s.appendLeft(
+          0,
+          `import {wrap as ___wrap} from 'vite-plugin-comlink/symbol';\n`
+        );
 
-        s.appendLeft(0, `import {wrap} from 'comlink';import {endpointSymbol as ___endpointSymbol} from 'vite-plugin-comlink/symbol';\n`);
+        const prevSourcemapConsumer = await new SourceMapConsumer(
+          this.getCombinedSourcemap()
+        );
+        const thisSourcemapConsumer = await new SourceMapConsumer(
+          s.generateMap()
+        );
 
-        const prevSourcemapConsumer = await new SourceMapConsumer(this.getCombinedSourcemap());
-        const thisSourcemapConsumer = await new SourceMapConsumer(s.generateMap());
-
-        const sourceMapGen = SourceMapGenerator.fromSourceMap(thisSourcemapConsumer);
+        const sourceMapGen = SourceMapGenerator.fromSourceMap(
+          thisSourcemapConsumer
+        );
         sourceMapGen.applySourceMap(prevSourcemapConsumer, id);
 
         return {
@@ -141,7 +137,7 @@ export function comlink({
           map: sourceMapGen.toJSON(),
         };
       },
-    } as Plugin
+    } as Plugin,
   ];
 }
 
