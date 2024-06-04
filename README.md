@@ -1,5 +1,12 @@
 # vite-plugin-comlink
 
+![NPM Version](https://img.shields.io/npm/l/vite-plugin-comlink)
+![NPM Version](https://img.shields.io/npm/v/vite-plugin-comlink)
+![NPM Version](https://img.shields.io/bundlephobia/minzip/vite-plugin-comlink)
+![NPM Version](https://img.shields.io/npm/dm/vite-plugin-comlink)
+![NPM Version](https://img.shields.io/npm/d18m/vite-plugin-comlink)
+
+
 > This plugins requires vite >=2.8 for WebWorkers and vite >= 2.9.6 for shared worker to work properly.
 
 Use WebWorkers with comlink.
