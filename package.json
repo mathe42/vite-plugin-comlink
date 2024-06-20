@@ -35,7 +35,7 @@
     "source-map": "^0.7.4"
   },
   "devDependencies": {
-    "@types/node": "20.12.12",
+    "@types/node": "20.14.7",
     "comlink": "4.4.1",
     "tsup": "8.0.2",
     "typescript": "5.4.5",
@@ -46,6 +46,6 @@
     "vite": ">=2.9.6"
   },
   "volta": {
-    "node": "20.13.1"
+    "node": "20.15.0"
   }
 }
