@@ -37,7 +37,7 @@
   "devDependencies": {
     "@types/node": "20.14.7",
     "comlink": "4.4.1",
-    "tsup": "8.0.2",
+    "tsup": "8.1.0",
     "typescript": "5.5.2",
     "vite": "5.2.11"
   },
