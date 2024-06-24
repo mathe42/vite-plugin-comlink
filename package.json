@@ -35,7 +35,7 @@
     "source-map": "^0.7.4"
   },
   "devDependencies": {
-    "@types/node": "20.14.7",
+    "@types/node": "20.14.8",
     "comlink": "4.4.1",
     "tsup": "8.1.0",
     "typescript": "5.5.2",
