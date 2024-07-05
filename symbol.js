@@ -1,11 +1,5 @@
 const { wrap: comlink_wrap } = require("comlink");
-const comlink = {
-    proxy,
-    proxyMarker,
-    finalizer,
-    releaseProxy,
-    createEndpoint
-} = require('comlink');
+const comlink = require('comlink');
 
 Object.assign(module.exports, comlink);
 
