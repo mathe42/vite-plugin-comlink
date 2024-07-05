@@ -1,17 +1,20 @@
-import { wrap as comlink_wrap } from "comlink";
-export {
+const { wrap: comlink_wrap } = require("comlink");
+const comlink = {
     proxy,
     proxyMarker,
     finalizer,
     releaseProxy,
     createEndpoint
-} from 'comlink'
-export const endpointSymbol = Symbol("getEndpoint");
+} = require('comlink');
+
+Object.assign(module.exports, comlink);
+
+const endpointSymbol = module.exports.endpointSymbol = Symbol("getEndpoint");
 
 /**
  * internal API
  */
-export const wrap = (ep) => {
+module.exports.wrap = (ep) => {
     const wrapped = comlink_wrap(ep);
     return new Proxy(wrapped, {
       get(_target, prop, _receiver) {
