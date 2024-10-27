@@ -108,7 +108,9 @@ export function comlink(): Plugin[] {
           }
           const worker_constructor = `${c1_new}${className}${c3_new_url}${urlQuote}${prefix}${path}${urlQuote}${c5_import_meta},${options}${c8_end}`;
 
-          const insertCode = `___wrap(${worker_constructor});\n`;
+          const extra_shared = c2_type == "ComlinkWorker" ? "" : ".port";
+
+          const insertCode = `___wrap((${worker_constructor})${extra_shared});\n`;
 
           s.overwrite(index, index + matchCode.length, insertCode);
         }
