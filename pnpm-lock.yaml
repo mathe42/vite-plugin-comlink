@@ -23,8 +23,8 @@ devDependencies:
     specifier: 4.4.1
     version: 4.4.1
   tsup:
-    specifier: 8.3.5
-    version: 8.3.5(typescript@5.6.3)
+    specifier: 8.3.6
+    version: 8.3.6(typescript@5.6.3)
   typescript:
     specifier: 5.6.3
     version: 5.6.3
@@ -1183,8 +1183,8 @@ packages:
     resolution: {integrity: sha512-Y/arvbn+rrz3JCKl9C4kVNfTfSm2/mEp5FSz5EsZSANGPSlQrpRI5M4PKF+mJnE52jOO90PnPSc3Ur3bTQw0gA==}
     dev: true
 
-  /tsup@8.3.5(typescript@5.6.3):
-    resolution: {integrity: sha512-Tunf6r6m6tnZsG9GYWndg0z8dEV7fD733VBFzFJ5Vcm1FtlXB8xBD/rtrBi2a3YKEV7hHtxiZtW5EAVADoe1pA==}
+  /tsup@8.3.6(typescript@5.6.3):
+    resolution: {integrity: sha512-XkVtlDV/58S9Ye0JxUUTcrQk4S+EqlOHKzg6Roa62rdjL1nGWNUstG0xgI4vanHdfIpjP448J8vlN0oK6XOJ5g==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
