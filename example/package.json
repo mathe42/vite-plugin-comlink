@@ -11,7 +11,7 @@
   "devDependencies": {
     "typescript": "^5.2.2",
     "vite": "^5.2.0",
-    "vite-plugin-inspect": "^0.8.4",
+    "vite-plugin-inspect": "^10.0.0",
     "vite-plugin-comlink": "../"
   },
   "dependencies": {
