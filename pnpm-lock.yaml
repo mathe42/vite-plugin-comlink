@@ -17,8 +17,8 @@ dependencies:
 
 devDependencies:
   '@types/node':
-    specifier: 20.17.1
-    version: 20.17.1
+    specifier: 22.13.1
+    version: 22.13.1
   comlink:
     specifier: 4.4.1
     version: 4.4.1
@@ -30,7 +30,7 @@ devDependencies:
     version: 5.6.3
   vite:
     specifier: 5.4.10
-    version: 5.4.10(@types/node@20.17.1)
+    version: 5.4.10(@types/node@22.13.1)
 
 packages:
 
@@ -645,10 +645,10 @@ packages:
     resolution: {integrity: sha512-AYnb1nQyY49te+VRAVgmzfcgjYS91mY5P0TKUDCLEM+gNnA+3T6rWITXRLYCpahpqSQbN5cE+gHpnPyXjHWxcw==}
     dev: true
 
-  /@types/node@20.17.1:
-    resolution: {integrity: sha512-j2VlPv1NnwPJbaCNv69FO/1z4lId0QmGvpT41YxitRtWlg96g/j8qcv2RKsLKe2F6OJgyXhupN1Xo17b2m139Q==}
+  /@types/node@22.13.1:
+    resolution: {integrity: sha512-jK8uzQlrvXqEU91UxiK5J7pKHyzgnI1Qnl0QDHIgVGuolJhRb9EEl28Cj9b3rGR8B2lhFCtvIm5os8lFnO/1Ew==}
     dependencies:
-      undici-types: 6.19.8
+      undici-types: 6.20.0
     dev: true
 
   /ansi-regex@5.0.1:
@@ -1232,11 +1232,11 @@ packages:
     hasBin: true
     dev: true
 
-  /undici-types@6.19.8:
-    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+  /undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
     dev: true
 
-  /vite@5.4.10(@types/node@20.17.1):
+  /vite@5.4.10(@types/node@22.13.1):
     resolution: {integrity: sha512-1hvaPshuPUtxeQ0hsVH3Mud0ZanOLwVTneA1EgbAM5LhaZEqyPWGRQ7BtaMvUrTDeEaC8pxtj6a6jku3x4z6SQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
@@ -1267,7 +1267,7 @@ packages:
       terser:
         optional: true
     dependencies:
-      '@types/node': 20.17.1
+      '@types/node': 22.13.1
       esbuild: 0.21.5
       postcss: 8.4.47
       rollup: 4.24.1
