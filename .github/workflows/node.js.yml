@@ -13,6 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: setup node and pnpm
-      uses: dafnik/setup-node-pnpm@v3
+      uses: dafnik/setup-node-pnpm@v4
     - run: pnpm i
     - run: pnpm run build
