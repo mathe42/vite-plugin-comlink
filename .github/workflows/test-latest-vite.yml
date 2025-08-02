@@ -42,10 +42,12 @@ jobs:
 
     - name: Install Playwright browsers
       working-directory: test-minimal-example
-      run: npx playwright install chromium
+      run: npx playwright install chromium firefox
 
     - name: Run tests
       working-directory: test-minimal-example
+      env:
+        CI: true
       run: npm test
 
     - name: Report Vite version
