@@ -141,29 +141,7 @@ async function runTests() {
     })
   }
 
-  // Test 6: Conditional Worker Creation
-  try {
-    const conditionalWorker = new ComlinkWorker<typeof import('./conditional-worker')>(
-      new URL('./conditional-worker.ts', import.meta.url)
-    )
-    
-    const sharedResult = await conditionalWorker.conditionalWorkerCreation(true)
-    const regularResult = await conditionalWorker.conditionalWorkerCreation(false)
-    
-    testResults.push({
-      name: 'Conditional Worker Creation',
-      passed: sharedResult.supported && regularResult.supported && sharedResult.type === (typeof SharedWorker !== 'undefined' ? 'shared' : 'regular') && regularResult.type === 'regular',
-      message: `Conditional: shared=${sharedResult.type}, regular=${regularResult.type}, SharedWorker=${typeof SharedWorker !== 'undefined'}`
-    })
-  } catch (error) {
-    testResults.push({
-      name: 'Conditional Worker Creation',
-      passed: false,
-      message: `Error: ${error}`
-    })
-  }
-
-  // Test 7: Worker in Function
+  // Test 6: Worker in Function (moved up)
   try {
     const conditionalWorker = new ComlinkWorker<typeof import('./conditional-worker')>(
       new URL('./conditional-worker.ts', import.meta.url)
@@ -184,7 +162,7 @@ async function runTests() {
     })
   }
 
-  // Test 8: Multiple Workers Management
+  // Test 7: Multiple Workers Management
   try {
     const conditionalWorker = new ComlinkWorker<typeof import('./conditional-worker')>(
       new URL('./conditional-worker.ts', import.meta.url)

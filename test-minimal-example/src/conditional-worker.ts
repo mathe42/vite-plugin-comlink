@@ -1,8 +1,12 @@
 export function conditionalWorkerCreation(shouldCreateShared: boolean) {
-  if (shouldCreateShared && typeof SharedWorker !== 'undefined') {
-    return { type: 'shared', supported: true };
+  // Check if we're in a worker context or main thread
+  const isMainThread = typeof window !== 'undefined';
+  const hasSharedWorker = isMainThread && typeof SharedWorker !== 'undefined';
+  
+  if (shouldCreateShared && hasSharedWorker) {
+    return { type: 'shared', supported: true, context: 'main', hasSharedWorker };
   } else {
-    return { type: 'regular', supported: true };
+    return { type: 'regular', supported: true, context: isMainThread ? 'main' : 'worker', hasSharedWorker };
   }
 }
 
