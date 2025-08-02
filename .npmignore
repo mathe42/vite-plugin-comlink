@@ -3,3 +3,4 @@ example
 .github
 renovate.json
 tsconfig.json
+test-minimal-example
