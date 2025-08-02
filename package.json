@@ -9,26 +9,24 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     },
     "./client": {
       "types": "./client.d.ts"
     },
     "./symbol": {
       "types": "./dist/symbol.d.ts",
-      "import": "./dist/symbol.mjs",
-      "require": "./dist/symbol.js"
+      "default": "./dist/symbol.js"
     }
   },
   "author": "Sebastian Krüger (@mathe42)",
   "license": "MIT",
   "scripts": {
-    "build": "tsup src/index.ts --dts --format cjs,esm && tsup src/symbol.ts --dts --format cjs,esm",
+    "build": "tsup",
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
