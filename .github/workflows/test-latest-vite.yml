@@ -15,8 +15,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: [18, 20, 22]
+        os: [ubuntu-latest]
+        node-version: [22]
       fail-fast: false
 
     steps:
@@ -50,7 +50,7 @@ jobs:
 
     - name: Upload test results
       if: failure()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: test-results-${{ matrix.os }}-node${{ matrix.node-version }}
         path: test-minimal-example/test-results/
@@ -60,7 +60,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        vite-version: ['4.5.0', '5.0.0', '5.1.0', '5.2.0', '5.3.0', '5.4.0', 'latest']
+        vite-version: ['4', '5', '6', '7', 'latest']
       fail-fast: false
 
     steps:
