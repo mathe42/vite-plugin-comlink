@@ -11,12 +11,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
+  test-vite-versions:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node-version: [22]
+        node-version: [18, 20, 22]
+        vite-version: ['5', '6', '7', 'latest', 'beta', 'alpha']
       fail-fast: false
 
     steps:
@@ -25,51 +26,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Install root dependencies
-      run: npm install
-
-    - name: Build plugin
-      run: npm run build
-
-    - name: Install test dependencies
-      working-directory: test-minimal-example
-      run: |
-        # Update to latest Vite version
-        npm install vite@latest --save-dev
-        npm install
-
-    - name: Install Playwright browsers
-      working-directory: test-minimal-example
-      run: npx playwright install chromium
-
-    - name: Run tests
-      working-directory: test-minimal-example
-      run: npm test
-
-    - name: Upload test results
-      if: failure()
-      uses: actions/upload-artifact@v4
-      with:
-        name: test-results-${{ matrix.os }}-node${{ matrix.node-version }}
-        path: test-minimal-example/test-results/
-        retention-days: 7
-
-  test-vite-versions:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        vite-version: ['4', '5', '6', '7', 'latest']
-      fail-fast: false
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
+        node-version: ${{matrix.node-version}}
 
     - name: Install root dependencies
       run: npm install
