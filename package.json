@@ -43,7 +43,7 @@
   },
   "peerDependencies": {
     "comlink": "^4.3.1",
-    "vite": ">=2.9.6"
+    "vite": ">=4"
   },
   "volta": {
     "node": "22.18.0"
