@@ -120,21 +120,44 @@ export function comlink(): Plugin[] {
           `import {wrap as ___wrap} from 'vite-plugin-comlink/symbol';\n`
         );
 
-        const prevSourcemapConsumer = await new SourceMapConsumer(
-          this.getCombinedSourcemap()
-        );
-        const thisSourcemapConsumer = await new SourceMapConsumer(
-          s.generateMap()
-        );
+        // Generate source map for our transformations
+        const magicStringMap = s.generateMap({
+          source: id,
+          includeContent: true,
+          hires: true
+        });
 
-        const sourceMapGen = SourceMapGenerator.fromSourceMap(
-          thisSourcemapConsumer
-        );
-        sourceMapGen.applySourceMap(prevSourcemapConsumer, id);
+        // Get the existing source map from previous transforms
+        const existingMap = this.getCombinedSourcemap();
+        
+        let finalMap = magicStringMap;
+
+        // If there's an existing source map, we need to combine them
+        if (existingMap && existingMap.mappings && existingMap.mappings !== '') {
+          try {
+            // Create consumers for both source maps
+            const existingConsumer = await new SourceMapConsumer(existingMap);
+            const newConsumer = await new SourceMapConsumer(magicStringMap);
+
+            // Create a new generator and apply the transformations
+            const generator = SourceMapGenerator.fromSourceMap(newConsumer);
+            generator.applySourceMap(existingConsumer, id);
+
+            finalMap = generator.toJSON() as any;
+
+            // Clean up consumers
+            existingConsumer.destroy();
+            newConsumer.destroy();
+          } catch (error) {
+            // If source map combination fails, fall back to magic string map
+            console.warn('Failed to combine source maps:', error);
+            finalMap = magicStringMap;
+          }
+        }
 
         return {
           code: s.toString(),
-          map: sourceMapGen.toJSON(),
+          map: finalMap,
         };
       },
     } as Plugin,

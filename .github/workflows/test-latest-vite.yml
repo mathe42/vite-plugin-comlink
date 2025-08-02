@@ -1,0 +1,55 @@
+name: Test with Latest Vite
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+
+jobs:
+  test-vite-versions:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [22, 'latest']
+        vite-version: ['5', '6', '7', 'latest', 'beta', 'alpha']
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{matrix.node-version}}
+
+    - name: Install root dependencies
+      run: npm install
+
+    - name: Build plugin
+      run: npm run build
+
+    - name: Install test dependencies with specific Vite version
+      working-directory: test-minimal-example
+      run: |
+        npm install vite@${{ matrix.vite-version }} --save-dev
+        npm install
+
+    - name: Install Playwright browsers
+      working-directory: test-minimal-example
+      run: npx playwright install chromium
+
+    - name: Run tests
+      working-directory: test-minimal-example
+      run: npm test
+
+    - name: Report Vite version
+      working-directory: test-minimal-example
+      run: |
+        echo "Testing with Vite version:"
+        npx vite --version

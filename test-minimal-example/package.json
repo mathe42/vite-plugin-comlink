@@ -1,0 +1,21 @@
+{
+  "name": "vite-plugin-comlink-test",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "test": "vite build && node test-runner.js"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vite": "latest"
+  },
+  "dependencies": {
+    "comlink": "^4.4.1",
+    "vite-plugin-comlink": "file:.."
+  }
+}

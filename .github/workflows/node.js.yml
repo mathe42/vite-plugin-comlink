@@ -12,7 +12,9 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-    - name: setup node and pnpm
-      uses: dafnik/setup-node-pnpm@v3
-    - run: pnpm i
-    - run: pnpm run build
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 22
+    - run: npm install
+    - run: npm run build
