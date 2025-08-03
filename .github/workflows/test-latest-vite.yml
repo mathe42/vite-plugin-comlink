@@ -82,9 +82,12 @@ jobs:
     - name: Install test dependencies with Rolldown-Vite
       working-directory: test-minimal-example
       run: |
-        # Create temporary package.json modifications for Rolldown
-        npm pkg set "dependencies.vite=npm:rolldown-vite@${{ matrix.vite-version }}"
+        # Remove existing vite dependency first
+        npm uninstall vite --save-dev || true
+        # Set overrides before installing
         npm pkg set "overrides.vite=npm:rolldown-vite@${{ matrix.vite-version }}"
+        # Now install with the rolldown-vite alias
+        npm install vite@npm:rolldown-vite@${{ matrix.vite-version }} --save-dev
         npm install
 
     - name: Install Playwright browsers
