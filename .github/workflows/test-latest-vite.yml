@@ -55,3 +55,52 @@ jobs:
       run: |
         echo "Testing with Vite version:"
         npx vite --version
+
+  test-vite-rolldown:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [22, 'latest']
+        vite-version: ['latest', 'beta', 'alpha']
+      fail-fast: false
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{matrix.node-version}}
+
+    - name: Install root dependencies
+      run: npm install
+
+    - name: Build plugin
+      run: npm run build
+
+    - name: Install test dependencies with Rolldown-Vite
+      working-directory: test-minimal-example
+      run: |
+        # Create temporary package.json modifications for Rolldown
+        npm pkg set "dependencies.vite=npm:rolldown-vite@${{ matrix.vite-version }}"
+        npm pkg set "overrides.vite=npm:rolldown-vite@${{ matrix.vite-version }}"
+        npm install
+
+    - name: Install Playwright browsers
+      working-directory: test-minimal-example
+      run: npx playwright install chromium firefox
+
+    - name: Run tests with Rolldown
+      working-directory: test-minimal-example
+      env:
+        CI: true
+      run: npm test
+
+    - name: Report Vite and Rolldown versions
+      working-directory: test-minimal-example
+      run: |
+        echo "Testing with Rolldown-Vite version:"
+        npx vite --version
+        echo "Package info:"
+        npm list vite
