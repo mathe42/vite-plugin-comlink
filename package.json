@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "json5": "2.2.3",
-    "magic-string": "0.30.17",
+    "magic-string": "0.30.18",
     "source-map": "^0.7.4"
   },
   "devDependencies": {
