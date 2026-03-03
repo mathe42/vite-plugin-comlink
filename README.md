@@ -6,7 +6,7 @@
 ![NPM Version](https://img.shields.io/npm/dm/vite-plugin-comlink)
 ![NPM Version](https://img.shields.io/npm/d18m/vite-plugin-comlink)
 
-
+TESTING
 > This plugin requires vite >=5
 
 Use WebWorkers with comlink.
